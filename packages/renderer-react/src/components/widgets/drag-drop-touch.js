@@ -168,13 +168,13 @@ export function initDragDropTouch() {
             var _this = this;
             if (this._shouldHandle(e)) {
                 // raise double-click and prevent zooming
-                if (Date.now() - this._lastClick < DragDropTouch._DBLCLICK) {
-                    if (this._dispatchEvent(e, 'dblclick', e.target)) {
-                        e.preventDefault();
-                        this._reset();
-                        return;
-                    }
-                }
+                // if (Date.now() - this._lastClick < DragDropTouch._DBLCLICK) {
+                //     if (this._dispatchEvent(e, 'dblclick', e.target)) {
+                //         e.preventDefault();
+                //         this._reset();
+                //         return;
+                //     }
+                // }
                 // clear all variables
                 this._reset();
                 // get nearest draggable element
@@ -187,21 +187,22 @@ export function initDragDropTouch() {
                         this._dragSource = src;
                         this._ptDown = this._getPoint(e);
                         this._lastTouch = e;
-                        e.preventDefault();
-                        // show context menu if the user hasn't started dragging after a while
-                        setTimeout(function () {
-                            if (_this._dragSource == src && _this._img == null) {
-                                if (_this._dispatchEvent(e, 'contextmenu', src)) {
-                                    _this._reset();
-                                }
-                            }
-                        }, DragDropTouch._CTXMENU);
-                        if (DragDropTouch._ISPRESSHOLDMODE) {
-                            this._pressHoldInterval = setTimeout(function () {
-                                _this._isDragEnabled = true;
-                                _this._touchmove(e);
-                            }, DragDropTouch._PRESSHOLDAWAIT);
-                        }
+                        // e.preventDefault();
+                        // // show context menu if the user hasn't started dragging after a while
+                        // setTimeout(function () {
+                        //     if (_this._dragSource == src && _this._img == null) {
+                        //         if (_this._dispatchEvent(e, 'contextmenu', src)) {
+                        //             _this._reset();
+                        //         }
+                        //     }
+                        // }, DragDropTouch._CTXMENU);
+                        // if (DragDropTouch._ISPRESSHOLDMODE) {
+                        //     this._pressHoldInterval = setTimeout(function () {
+                        //         console.info('dragEnabled')
+                        //         _this._isDragEnabled = true;
+                        //         _this._touchmove(e);
+                        //     }, DragDropTouch._PRESSHOLDAWAIT);
+                        // }
                     }
                 }
             }
