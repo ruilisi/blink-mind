@@ -5,7 +5,6 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { EventKey, RefKey, topicRefKey } from '../../utils';
 import { DragScrollWidget } from '../common';
-import { initDragDropTouch } from './drag-drop-touch';
 const NodeLayer = styled.div`
   position: relative;
   display: flex;
@@ -83,7 +82,6 @@ class MindDragScrollWidget<
         rootTopicRect.height
     );
     this.layout();
-    initDragDropTouch();
   }
 
   componentWillUnmount(): void {

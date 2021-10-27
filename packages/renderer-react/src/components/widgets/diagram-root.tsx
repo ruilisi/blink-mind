@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { RefKey } from '../../utils';
+import { initDragDropTouch } from './drag-drop-touch';
 import { MindDragScrollWidget } from './mind-drag-scroll-widget';
 const Root = styled.div`
   display: flex;
@@ -18,10 +19,14 @@ const DiagramContainer = styled.div`
   position: relative;
 `;
 export function DiagramRoot(props) {
-  const { controller, saveRef } = props;
+  const { controller, getRef, saveRef } = props;
   const [diagramState, setDiagramState] = useState(
     controller.run('getInitialDiagramState', props)
   );
+  useEffect(() => {
+    const container = getRef(RefKey.DIAGRAM_ROOT_KEY);
+    initDragDropTouch(container);
+  }, []);
   const nProps = {
     ...props,
     diagramState,

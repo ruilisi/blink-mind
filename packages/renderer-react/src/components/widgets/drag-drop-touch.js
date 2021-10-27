@@ -1,4 +1,4 @@
-export function initDragDropTouch() {
+export function initDragDropTouch(container) {
     'use strict';
     /**
      * Object used to hold the data that is being dragged during drag and drop operations.
@@ -138,7 +138,7 @@ export function initDragDropTouch() {
             // detect passive event support
             // https://github.com/Modernizr/Modernizr/issues/1894
             var supportsPassive = false;
-            document.addEventListener('test', function () { }, {
+            container.addEventListener('test', function () { }, {
                 get passive() {
                     supportsPassive = true;
                     return true;
@@ -146,7 +146,7 @@ export function initDragDropTouch() {
             });
             // listen to touch events
             if (navigator.maxTouchPoints) {
-                var d = document, 
+                var d = container,
                     ts = this._touchstart.bind(this), 
                     tm = this._touchmove.bind(this), 
                     te = this._touchend.bind(this), 
