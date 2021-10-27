@@ -84,22 +84,16 @@ export class TopicContentWidget extends BaseWidget<Props, State> {
     // Optional method called once the context menu is closed.
   }
 
-  handleTopicClickTimeout;
-
   onClick = ev => {
     const props = this.props;
     const { controller } = props;
-    //TODO bug [Violation] 'setTimeout' handler took 69ms
-    this.handleTopicClickTimeout = setTimeout(() => {
-      // log('handleTopicClick');
-      //注意这里要传递this.props, 而不是props, 因为会先调用onClick, 再调用其他的topic-content-editor的onClickOutside
-      //其他组件的onClickOutside是个同步的函数,会设置新的model, 如果这里用props传参,会导致model 还是老的model
-      controller.run('handleTopicClick', { ...this.props, ev });
-    }, 200);
+    // log('handleTopicClick');
+    //注意这里要传递this.props, 而不是props, 因为会先调用onClick, 再调用其他的topic-content-editor的onClickOutside
+    //其他组件的onClickOutside是个同步的函数,会设置新的model, 如果这里用props传参,会导致model 还是老的model
+    controller.run('handleTopicClick', { ...this.props, ev });
   };
 
   onDoubleClick = ev => {
-    clearTimeout(this.handleTopicClickTimeout);
     const { controller } = this.props;
     controller.run('handleTopicDoubleClick', { ...this.props, ev });
   };
