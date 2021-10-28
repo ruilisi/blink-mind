@@ -3,7 +3,7 @@ import { HotKeysConfig } from '../../types';
 import { Hotkey, Hotkeys, HotkeysTarget } from '@blueprintjs/core';
 import * as React from 'react';
 import styled from 'styled-components';
-import { contentRefKey, EventKey, RefKey, topicRefKey } from '../../utils';
+import { contentRefKey, EventKey, getRelativeRect, RefKey, topicRefKey } from '../../utils';
 import { DragScrollWidget } from '../common';
 const NodeLayer = styled.div`
   position: relative;
@@ -131,20 +131,26 @@ class MindDragScrollWidget<
   };
 
   onDragOver = e => {
-    const { getRef, model, diagramState, setDiagramState } = this.props;
+    const { getRef, model, controller, diagramState, setDiagramState } = this.props;
     e.preventDefault();
     const boxes = [];
+    const svgDropEffect = getRef('svg-drop-effect') as HTMLElement;
+    if (!svgDropEffect) return;
+
+    const svgRect = svgDropEffect.getBoundingClientRect();
     for (const topicKey of model.topics.keys()) {
       if (model.focusKey === topicKey) {
         // skip self
         continue;
       }
-      const content = getRef(contentRefKey(topicKey));
+      const content = getRef(contentRefKey(topicKey)) as HTMLElement;
       if (content) {
-        const rect = content.getBoundingClientRect();
+        const contentRect = content.getBoundingClientRect();
+        const x = contentRect.left - svgRect.left + contentRect.width;
+        const y = contentRect.top - svgRect.top + contentRect.height / 2;
         boxes.push({
           key: topicKey,
-          rect
+          rect: { x, y }
         });
       }
     }
@@ -152,21 +158,18 @@ class MindDragScrollWidget<
     let droppingTarget;
     for (const box of boxes) {
       const dist =
-        Math.pow(box.rect.x + box.rect.width / 2 - e.clientX, 2) +
-        Math.pow(box.rect.y + box.rect.height / 2 - e.clientY, 2);
+        Math.pow(box.rect.x - (e.clientX - svgRect.x), 2) +
+        Math.pow(box.rect.y - (e.clientY - svgRect.y), 2);
       if (dist < minDist) {
         minDist = dist;
         droppingTarget = box;
       }
     }
-    if (droppingTarget.key !== diagramState.dragDrop?.targetKey) {
-      setDiagramState({
-        ...diagramState,
-        dragDrop: {
-          targetKey: droppingTarget.key,
-          targetDir: 'in'
-        }
-      });
+    if (droppingTarget) {
+      svgDropEffect.innerHTML = `<g><path stroke="#FCB49A" stroke-width="3" fill="none" d="M ${
+        droppingTarget.rect.x
+      } ${droppingTarget.rect.y} L ${e.clientX - svgRect.x} ${e.clientY -
+        svgRect.y}" /></g>`;
     }
     this.droppingTopic = droppingTarget;
   };
@@ -184,12 +187,12 @@ class MindDragScrollWidget<
   };
 
   onDragEnd = e => {
-    const { diagramState, setDiagramState } = this.props;
+    const { getRef } = this.props;
     this.droppingTopic = null;
-    setDiagramState({
-      ...diagramState,
-      dragDrop: null
-    });
+    const svgDropEffect = getRef('svg-drop-effect') as HTMLElement;
+    if (svgDropEffect) {
+      svgDropEffect.innerHTML = null;
+    }
   };
 
   render() {

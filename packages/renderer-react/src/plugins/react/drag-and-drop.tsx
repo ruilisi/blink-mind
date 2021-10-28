@@ -136,6 +136,7 @@ export function DragAndDropPlugin() {
     handleTopicDrop(props) {
       log('handleTopicDrop');
       const {
+        getRef,
         controller,
         topicKey,
         model,
@@ -144,7 +145,11 @@ export function DragAndDropPlugin() {
       } = props;
       props = { ...props, srcKey: model.focusKey, dstKey: topicKey };
 
-      setDiagramState({ ...diagramState, dragDrop: null });
+      const svgDropEffect = getRef('svg-drop-effect') as HTMLElement;
+      if (svgDropEffect) {
+        svgDropEffect.innerHTML = null;
+      }
+      // setDiagramState({ ...diagramState, dragDrop: null });
       if (controller.run('canDrop', props)) {
         controller.run('operation', {
           ...props,

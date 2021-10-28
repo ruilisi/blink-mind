@@ -18,6 +18,8 @@ const TopicContent = styled.div<TopicContentProps>`
   cursor: pointer;
   //overflow: hidden;
   position: relative;
+  margin-top: ${props => `${props.marginV}px`};
+  margin-bottom: ${props => `${props.marginV}px`};
 `;
 
 const TopicContentWithDropArea = styled.div`
@@ -45,24 +47,24 @@ export class TopicContentWidget extends BaseWidget<Props, State> {
     this.run('handleTopicDragStart', { ...this.props, ev });
   };
 
-  onDragOver = ev => {
-    // log('onDragOver');
-    ev.preventDefault();
-  };
+  // onDragOver = ev => {
+  //   // log('onDragOver');
+  //   ev.preventDefault();
+  // };
 
-  onDragEnter = ev => {
-    log('onDragEnter', this.props.topicKey);
-    this.run('handleTopicDragEnter', { ...this.props, ev, dropDir: 'in' });
-  };
+  // onDragEnter = ev => {
+  //   log('onDragEnter', this.props.topicKey);
+  //   this.run('handleTopicDragEnter', { ...this.props, ev, dropDir: 'in' });
+  // };
 
-  onDragLeave = ev => {
-    this.run('handleTopicDragLeave', { ...this.props, ev, dropDir: 'in' });
-  };
+  // onDragLeave = ev => {
+  //   this.run('handleTopicDragLeave', { ...this.props, ev, dropDir: 'in' });
+  // };
 
-  onDrop = ev => {
-    log('onDrop');
-    this.run('handleTopicDrop', { ...this.props, ev, dropDir: 'in' });
-  };
+  // onDrop = ev => {
+  //   log('onDrop');
+  //   this.run('handleTopicDrop', { ...this.props, ev, dropDir: 'in' });
+  // };
 
   public renderContextMenu() {
     const { controller } = this.props;
@@ -157,37 +159,38 @@ export class TopicContentWidget extends BaseWidget<Props, State> {
       ...props,
       onClickCollapse: this.onClickCollapse.bind(this)
     });
-    const prevDropArea = controller.run('renderTopicDropArea', {
-      ...props,
-      dropDir: 'prev'
-    });
-    const nextDropArea = controller.run('renderTopicDropArea', {
-      ...props,
-      dropDir: 'next'
-    });
-    const dropEventHandlers = {
-      onDragEnter: this.onDragEnter,
-      onDragLeave: this.onDragLeave,
-      onDragOver: this.onDragOver,
-      onDrop: this.onDrop
-    };
+    // const prevDropArea = controller.run('renderTopicDropArea', {
+    //   ...props,
+    //   dropDir: 'prev'
+    // });
+    // const nextDropArea = controller.run('renderTopicDropArea', {
+    //   ...props,
+    //   dropDir: 'next'
+    // });
+    // const dropEventHandlers = {
+    //   onDragEnter: this.onDragEnter,
+    //   onDragLeave: this.onDragLeave,
+    //   onDragOver: this.onDragOver,
+    //   onDrop: this.onDrop
+    // };
     // log(topicKey, 'style', topicStyle);
     return (
       <TopicContentWithDropArea>
-        {prevDropArea}
+        {/* {prevDropArea} */}
         <TopicContent
           style={topicStyle}
+          marginV={model.config.theme.marginV / 2}
           draggable={draggable}
           ref={saveRef(contentRefKey(topicKey))}
           onDragStart={this.onDragStart}
           onClick={this.onClick}
           onDoubleClick={this.onDoubleClick}
-          {...dropEventHandlers}
+          // {...dropEventHandlers}
         >
           {controller.run('renderTopicBlocks', props)}
           {controller.run('renderTopicContentOthers', props)}
         </TopicContent>
-        {nextDropArea}
+        {/* {nextDropArea} */}
         {dir !== TopicDirection.MAIN && collapseIcon}
       </TopicContentWithDropArea>
     );
