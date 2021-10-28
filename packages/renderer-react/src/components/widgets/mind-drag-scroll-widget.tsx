@@ -3,7 +3,7 @@ import { HotKeysConfig } from '../../types';
 import { Hotkey, Hotkeys, HotkeysTarget } from '@blueprintjs/core';
 import * as React from 'react';
 import styled from 'styled-components';
-import { EventKey, RefKey, topicRefKey } from '../../utils';
+import { contentRefKey, EventKey, RefKey, topicRefKey } from '../../utils';
 import { DragScrollWidget } from '../common';
 const NodeLayer = styled.div`
   position: relative;
@@ -23,6 +23,8 @@ export interface MindDragScrollWidgetProps {
   model: Model;
   saveRef?: Function;
   getRef?: Function;
+  diagramState: any;
+  setDiagramState: (any) => void;
 }
 
 @HotkeysTarget
@@ -32,6 +34,8 @@ class MindDragScrollWidget<
   constructor(props: MindDragScrollWidgetProps) {
     super(props);
   }
+
+  droppingTopic;
 
   renderHotkeys() {
     const props = this.props;
@@ -126,11 +130,78 @@ class MindDragScrollWidget<
     }
   };
 
+  onDragOver = e => {
+    const { getRef, model, diagramState, setDiagramState } = this.props;
+    e.preventDefault();
+    const boxes = [];
+    for (const topicKey of model.topics.keys()) {
+      if (model.focusKey === topicKey) {
+        // skip self
+        continue;
+      }
+      const content = getRef(contentRefKey(topicKey));
+      if (content) {
+        const rect = content.getBoundingClientRect();
+        boxes.push({
+          key: topicKey,
+          rect
+        });
+      }
+    }
+    let minDist = Infinity;
+    let droppingTarget;
+    for (const box of boxes) {
+      const dist =
+        Math.pow(box.rect.x + box.rect.width / 2 - e.clientX, 2) +
+        Math.pow(box.rect.y + box.rect.height / 2 - e.clientY, 2);
+      if (dist < minDist) {
+        minDist = dist;
+        droppingTarget = box;
+      }
+    }
+    if (droppingTarget.key !== diagramState.dragDrop?.targetKey) {
+      setDiagramState({
+        ...diagramState,
+        dragDrop: {
+          targetKey: droppingTarget.key,
+          targetDir: 'in'
+        }
+      });
+    }
+    this.droppingTopic = droppingTarget;
+  };
+
+  onDrop = e => {
+    if (this.droppingTopic) {
+      this.props.controller.run('handleTopicDrop', {
+        ...this.props,
+        ev: e,
+        dropDir: 'in',
+        topicKey: this.droppingTopic.key
+      });
+    }
+    this.droppingTopic = null;
+  };
+
+  onDragEnd = e => {
+    const { diagramState, setDiagramState } = this.props;
+    this.droppingTopic = null;
+    setDiagramState({
+      ...diagramState,
+      dragDrop: null
+    });
+  };
+
   render() {
     const { saveRef, model, controller } = this.props;
     const nodeKey = model.editorRootTopicKey;
     return (
-      <DIV onWheel={this.onWheel}>
+      <DIV
+        onWheel={this.onWheel}
+        onDragOver={this.onDragOver}
+        onDragEnd={this.onDragEnd}
+        onDrop={this.onDrop}
+      >
         <DragScrollWidget
           {...this.state}
           enableMouseWheel={false}
