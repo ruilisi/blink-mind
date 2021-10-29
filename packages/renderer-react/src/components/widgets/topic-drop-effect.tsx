@@ -12,7 +12,7 @@ const DropEffectSvg = styled.svg`
   top: 0;
   z-index: 2;
   pointer-events: none;
-  overflow: visible;
+  overflow: visible !important;
 `;
 
 export class TopicDropEffect extends BaseWidget<BaseProps> {

@@ -131,8 +131,9 @@ class MindDragScrollWidget<
   };
 
   onDragOver = e => {
-    const { getRef, model, controller, diagramState, setDiagramState } = this.props;
+    const { getRef, model, controller } = this.props;
     e.preventDefault();
+    e.stopPropagation();
     const boxes = [];
     const svgDropEffect = getRef('svg-drop-effect') as HTMLElement;
     const zoomFactor = controller.run('getZoomFactor', this.props);
