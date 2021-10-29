@@ -1,6 +1,5 @@
 import { BlockType } from '@blink-mind/core';
 import * as React from 'react';
-import plainSerializer from 'slate-plain-serializer';
 import { TopicContentEditor } from './components/topic-content-editor';
 import { TopicDescEditor } from './components/topic-desc-editor';
 
@@ -40,9 +39,7 @@ export function SimpleTextEditorPlugin() {
     serializeBlockData(props, next) {
       const { block } = props;
       if (block.type === BlockType.CONTENT || block.type === BlockType.DESC) {
-        return typeof block.data === 'string'
-          ? block.data
-          : plainSerializer.serialize(block.data);
+        return block.data;
       }
       return next();
     }

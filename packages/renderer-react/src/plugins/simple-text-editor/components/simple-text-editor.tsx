@@ -1,8 +1,6 @@
 import { Controller, KeyType, Model } from '@blink-mind/core';
 import debug from 'debug';
 import * as React from 'react';
-import plainSerializer from 'slate-plain-serializer';
-import { Editor } from 'slate-react';
 import styled from 'styled-components';
 const log = debug('node:text-editor');
 
@@ -15,6 +13,15 @@ const Content = styled.div<ContentProps>`
   background-color: ${props => (props.readOnly ? null : 'white')};
   cursor: ${props => (props.readOnly ? 'pointer' : 'text')};
   min-width: 50px;
+`;
+
+const Editor = styled.textarea`
+  outline: none;
+  border: none;
+  resize: none;
+  white-space: pre;
+  overflow-wrap: break-word;
+  -webkit-user-modify: read-write-plaintext-only;
 `;
 
 interface Props {
@@ -42,9 +49,9 @@ export class SimpleTextEditor extends React.PureComponent<Props, State> {
     // log('onMouseMove');
     // e.stopPropagation();
   };
-  onChange({ value }) {
-    log('onChange', value);
-    this.setState({ content: value });
+  onChange(e) {
+    log('onChange', e.target.value);
+    this.setState({ content: e.target.value });
   }
 
   onKeyDown = e => {};
@@ -79,12 +86,7 @@ export class SimpleTextEditor extends React.PureComponent<Props, State> {
 
   getContent() {
     const { block } = this.getCustomizeProps();
-    let content = block.data;
-    if (content == null) return null;
-    if (typeof content === 'string') {
-      content = plainSerializer.deserialize(content);
-    }
-    return content;
+    return block.data;
   }
 
   initState() {
@@ -131,7 +133,7 @@ export class SimpleTextEditor extends React.PureComponent<Props, State> {
     };
     return (
       <Content {...contentProps}>
-        <Editor {...editorProps} autoFocus />
+        {readOnly ? content : <Editor {...editorProps} autoFocus />}
       </Content>
     );
   }
