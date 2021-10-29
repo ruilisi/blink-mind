@@ -29,8 +29,8 @@ export function DiagramRoot(props) {
     const container = getRef(RefKey.DIAGRAM_ROOT_KEY);
     initDragDropTouch(container);
 
-    container.addEventListener('pinch', e => {
-      let zoomFactor = initZoom.current * e.zoom;
+    container.addEventListener('pinch', (e: CustomEvent) => {
+      let zoomFactor = initZoom.current * e.detail.zoom;
       if (zoomFactor < 0.2) zoomFactor = 0.2;
       if (zoomFactor > 4) zoomFactor = 4;
       controller.run('setZoomFactor', { ...props, zoomFactor });

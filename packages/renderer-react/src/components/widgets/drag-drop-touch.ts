@@ -9,6 +9,10 @@
  * accessible through the @see:dataTransfer property of all drag events.
  */
 class DataTransfer {
+  _dropEffect: string;
+  _effectAllowed: string;
+  _data: any;
+
   constructor() {
     this._dropEffect = 'move';
     this._effectAllowed = 'all';
@@ -136,12 +140,30 @@ class DragDropTouch {
   static _ptProps = 'pageX,pageY,clientX,clientY,screenX,screenY,offsetX,offsetY'.split(
     ','
   );
+
+  _container: HTMLElement;
+  _lastClick: number;
+  _longTapTimeout: any;
+  _preV: { x: number; y: number };
+  _pinchStartLen: number;
+  _dragSource: HTMLElement;
+  _ptDown: { x: number; y: number };
+  _lastTouch: any;
+  _lastTarget: any;
+  _img: any;
+  _isDropZone: boolean;
+  _isDragEnabled: boolean;
+  _dataTransfer: DataTransfer;
+  _imgCustom: any;
+  _pressHoldInterval: any;
+  _imgOffset: any;
+
   constructor(container) {
     this._container = container;
     this._lastClick = 0;
     this._longTapTimeout;
     this._preV = { x: null, y: null };
-    this.pinchStartLen = null;
+    this._pinchStartLen = null;
     // detect passive event support
     // https://github.com/Modernizr/Modernizr/issues/1894
     var supportsPassive = false;
@@ -197,7 +219,7 @@ class DragDropTouch {
         };
         this._preV.x = v.x;
         this._preV.y = v.y;
-        this.pinchStartLen = this.getLen(this._preV);
+        this._pinchStartLen = this.getLen(this._preV);
         this._container.dispatchEvent(new Event('multiTouchStart'));
         return;
       }
@@ -246,9 +268,10 @@ class DragDropTouch {
         y: e.touches[1].pageY - e.touches[0].pageY
       };
       if (this._preV.x !== null) {
-        if (this.pinchStartLen > 0) {
-          const newEvent = new Event('pinch');
-          newEvent.zoom = this.getLen(v) / this.pinchStartLen;
+        if (this._pinchStartLen > 0) {
+          const newEvent = new CustomEvent<any>('pinch', {
+            detail: { zoom: this.getLen(v) / this._pinchStartLen }
+          });
           this._container.dispatchEvent(newEvent);
         }
       }
@@ -367,7 +390,7 @@ class DragDropTouch {
     clearTimeout(this._longTapTimeout);
   }
   // get point for a touch event
-  _getPoint(e, page) {
+  _getPoint(e, page = undefined) {
     if (e && e.touches) {
       e = e.touches[0];
     }
@@ -474,11 +497,11 @@ class DragDropTouch {
       var evt = document.createEvent('Event'),
         t = e.touches ? e.touches[0] : e;
       evt.initEvent(type, true, true);
-      evt.button = 0;
-      evt.which = evt.buttons = 1;
+      // evt.button = 0;
+      // evt.which = evt.buttons = 1;
       this._copyProps(evt, e, DragDropTouch._kbdProps);
       this._copyProps(evt, t, DragDropTouch._ptProps);
-      evt.dataTransfer = this._dataTransfer;
+      // evt.dataTransfer = this._dataTransfer;
       target.dispatchEvent(evt);
       return evt.defaultPrevented;
     }
