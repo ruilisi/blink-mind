@@ -4,7 +4,6 @@ import { BaseDemo } from '../common/base-demo';
 import { Diagram } from '@blink-mind/renderer-react';
 import { JsonSerializerPlugin } from '@blink-mind/plugin-json-serializer';
 import { OpenFilePlugin, ExportFilePlugin } from '@blink-mind/plugins';
-import RichTextEditorPlugin from '@blink-mind/plugin-rich-text-editor';
 
 import styled from 'styled-components';
 
@@ -21,7 +20,6 @@ const Container = styled.div`
 `;
 
 const plugins = [
-  RichTextEditorPlugin(),
   OpenFilePlugin(),
   ExportFilePlugin(),
   JsonSerializerPlugin()
