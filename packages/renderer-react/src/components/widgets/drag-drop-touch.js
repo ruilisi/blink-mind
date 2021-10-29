@@ -101,7 +101,6 @@ class DataTransfer {
   }
 }
 
-
 /**
  * Defines a class that adds support for touch-based HTML5 drag/drop operations.
  *
@@ -138,8 +137,11 @@ class DragDropTouch {
     ','
   );
   constructor(container) {
+    this._container = container;
     this._lastClick = 0;
     this._longTapTimeout;
+    this._preV = { x: null, y: null };
+    this.pinchStartLen = null;
     // detect passive event support
     // https://github.com/Modernizr/Modernizr/issues/1894
     var supportsPassive = false;
@@ -167,6 +169,10 @@ class DragDropTouch {
     clearTimeout(this._longTapTimeout);
   }
 
+  getLen(v) {
+    return Math.sqrt(v.x * v.x + v.y * v.y);
+  }
+
   // ** event handlers
   _touchstart(e) {
     var _this = this;
@@ -181,6 +187,20 @@ class DragDropTouch {
       // }
       // clear all variables
       this._reset();
+      // detect pinch
+      const len = e.touches.length;
+      if (len > 1) {
+        this._cancelLongTap();
+        const v = {
+          x: e.touches[1].pageX - e.touches[0].pageX,
+          y: e.touches[1].pageY - e.touches[0].pageY
+        };
+        this._preV.x = v.x;
+        this._preV.y = v.y;
+        this.pinchStartLen = this.getLen(this._preV);
+        this._container.dispatchEvent(new Event('multiTouchStart'));
+        return;
+      }
       // get nearest draggable element
       var src = this._closestDraggable(e.target);
       if (src) {
@@ -220,6 +240,23 @@ class DragDropTouch {
       return;
     }
     this._cancelLongTap();
+    if (e.touches.length > 1) {
+      const v = {
+        x: e.touches[1].pageX - e.touches[0].pageX,
+        y: e.touches[1].pageY - e.touches[0].pageY
+      };
+      if (this._preV.x !== null) {
+        if (this.pinchStartLen > 0) {
+          const newEvent = new Event('pinch');
+          newEvent.zoom = this.getLen(v) / this.pinchStartLen;
+          this._container.dispatchEvent(newEvent);
+        }
+      }
+      this._preV.x = v.x;
+      this._preV.y = v.y;
+      e.preventDefault();
+      return;
+    }
     if (this._shouldHandleMove(e) || this._shouldHandlePressHoldMove(e)) {
       // see if target wants to handle move
       var target = this._getTarget(e);
@@ -278,7 +315,7 @@ class DragDropTouch {
   // ** utilities
   // ignore events that have been handled or that involve more than one touch
   _shouldHandle(e) {
-    return e && !e.defaultPrevented && e.touches && e.touches.length < 2;
+    return e && !e.defaultPrevented && e.touches;
   }
 
   // use regular condition outside of press & hold mode
