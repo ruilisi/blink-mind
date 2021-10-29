@@ -135,6 +135,7 @@ class MindDragScrollWidget<
     e.preventDefault();
     const boxes = [];
     const svgDropEffect = getRef('svg-drop-effect') as HTMLElement;
+    const zoomFactor = controller.run('getZoomFactor', this.props);
     if (!svgDropEffect) return;
 
     const svgRect = svgDropEffect.getBoundingClientRect();
@@ -146,8 +147,8 @@ class MindDragScrollWidget<
       const content = getRef(contentRefKey(topicKey)) as HTMLElement;
       if (content) {
         const contentRect = content.getBoundingClientRect();
-        const x = contentRect.left - svgRect.left + contentRect.width;
-        const y = contentRect.top - svgRect.top + contentRect.height / 2;
+        const x = (contentRect.left - svgRect.left + contentRect.width) / zoomFactor;
+        const y = (contentRect.top - svgRect.top + contentRect.height / 2) / zoomFactor;
         boxes.push({
           key: topicKey,
           rect: { x, y }
@@ -156,10 +157,12 @@ class MindDragScrollWidget<
     }
     let minDist = Infinity;
     let droppingTarget;
+    const pointerX = (e.clientX - svgRect.x) / zoomFactor
+    const pointerY = (e.clientY - svgRect.y) / zoomFactor
     for (const box of boxes) {
       const dist =
-        Math.pow(box.rect.x - (e.clientX - svgRect.x), 2) +
-        Math.pow(box.rect.y - (e.clientY - svgRect.y), 2);
+        Math.pow(box.rect.x - pointerX, 2) +
+        Math.pow(box.rect.y - pointerY, 2);
       if (dist < minDist) {
         minDist = dist;
         droppingTarget = box;
@@ -168,8 +171,7 @@ class MindDragScrollWidget<
     if (droppingTarget) {
       svgDropEffect.innerHTML = `<g><path stroke="#FCB49A" stroke-width="3" fill="none" d="M ${
         droppingTarget.rect.x
-      } ${droppingTarget.rect.y} L ${e.clientX - svgRect.x} ${e.clientY -
-        svgRect.y}" /></g>`;
+      } ${droppingTarget.rect.y} L ${pointerX} ${pointerY}" /></g>`;
     }
     this.droppingTopic = droppingTarget;
   };
