@@ -124,7 +124,7 @@ class DragDropTouch {
   static _THRESHOLD = 5; // pixels to move before drag starts
   static _OPACITY = 0.5; // drag image opacity
   static _DBLCLICK = 500; // max ms between clicks in a double click
-  static _CTXMENU = 900; // ms to hold before raising 'contextmenu' event
+  static _CTXMENU = 750; // ms to hold before raising 'contextmenu' event
   static _ISPRESSHOLDMODE = false; // decides of press & hold mode presence
   static _PRESSHOLDAWAIT = 400; // ms to wait before press & hold is detected
   static _PRESSHOLDMARGIN = 25; // pixels that finger might shiver while pressing
@@ -139,6 +139,7 @@ class DragDropTouch {
   );
   constructor(container) {
     this._lastClick = 0;
+    this._longTapTimeout;
     // detect passive event support
     // https://github.com/Modernizr/Modernizr/issues/1894
     var supportsPassive = false;
@@ -160,6 +161,10 @@ class DragDropTouch {
       d.addEventListener('touchend', te);
       d.addEventListener('touchcancel', te);
     }
+  }
+
+  _cancelLongTap() {
+    clearTimeout(this._longTapTimeout);
   }
 
   // ** event handlers
@@ -189,14 +194,14 @@ class DragDropTouch {
           this._ptDown = this._getPoint(e);
           this._lastTouch = e;
           // e.preventDefault();
-          // // show context menu if the user hasn't started dragging after a while
-          // setTimeout(function () {
-          //     if (_this._dragSource == src && _this._img == null) {
-          //         if (_this._dispatchEvent(e, 'contextmenu', src)) {
-          //             _this._reset();
-          //         }
-          //     }
-          // }, DragDropTouch._CTXMENU);
+          // show context menu if the user hasn't started dragging after a while
+          this._longTapTimeout = setTimeout(function() {
+            if (_this._dragSource == src && _this._img == null) {
+              if (_this._dispatchEvent(e, 'contextmenu', src)) {
+                _this._reset();
+              }
+            }
+          }, DragDropTouch._CTXMENU);
           // if (DragDropTouch._ISPRESSHOLDMODE) {
           //     this._pressHoldInterval = setTimeout(function () {
           //         console.info('dragEnabled')
@@ -208,11 +213,13 @@ class DragDropTouch {
       }
     }
   }
+
   _touchmove(e) {
     if (this._shouldCancelPressHoldMove(e)) {
       this._reset();
       return;
     }
+    this._cancelLongTap();
     if (this._shouldHandleMove(e) || this._shouldHandlePressHoldMove(e)) {
       // see if target wants to handle move
       var target = this._getTarget(e);
@@ -242,7 +249,9 @@ class DragDropTouch {
       }
     }
   }
+
   _touchend(e) {
+    this._cancelLongTap();
     if (this._shouldHandle(e)) {
       // see if target wants to handle up
       if (this._dispatchEvent(this._lastTouch, 'mouseup', e.target)) {
@@ -318,6 +327,7 @@ class DragDropTouch {
     this._isDropZone = false;
     this._dataTransfer = new DataTransfer();
     clearInterval(this._pressHoldInterval);
+    clearTimeout(this._longTapTimeout);
   }
   // get point for a touch event
   _getPoint(e, page) {
