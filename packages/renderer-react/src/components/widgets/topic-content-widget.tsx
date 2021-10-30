@@ -1,5 +1,5 @@
 import { FocusMode, OpType, TopicDirection } from '@blink-mind/core';
-import { ContextMenuTarget } from '@blueprintjs/core';
+import { ContextMenu } from '@blueprintjs/core';
 import debug from 'debug';
 import * as React from 'react';
 import styled from 'styled-components';
@@ -34,7 +34,6 @@ interface State {
   dragEnter: boolean;
 }
 
-@ContextMenuTarget
 export class TopicContentWidget extends BaseWidget<Props, State> {
   constructor(props) {
     super(props);
@@ -175,7 +174,18 @@ export class TopicContentWidget extends BaseWidget<Props, State> {
     // };
     // log(topicKey, 'style', topicStyle);
     return (
-      <TopicContentWithDropArea>
+      <TopicContentWithDropArea
+        onContextMenu={e => {
+          const menu = this.renderContextMenu();
+          if (menu != null) {
+            e.preventDefault();
+            ContextMenu.show(this.renderContextMenu(), {
+              left: e.clientX,
+              top: e.clientY
+            });
+          }
+        }}
+      >
         {/* {prevDropArea} */}
         <TopicContent
           style={topicStyle}

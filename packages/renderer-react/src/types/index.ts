@@ -9,6 +9,7 @@ export type ToolbarItemConfigs = ToolbarItemConfig[];
 export interface HotKeyItem {
   label: string;
   combo: string;
+  global?: boolean;
   onKeyDown: (e: KeyboardEvent) => any;
 }
 

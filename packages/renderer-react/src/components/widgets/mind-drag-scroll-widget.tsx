@@ -1,9 +1,14 @@
 import { Controller, FocusMode, Model } from '@blink-mind/core';
 import { HotKeysConfig } from '../../types';
-import { Hotkey, Hotkeys, HotkeysTarget } from '@blueprintjs/core';
+import { HotkeysTarget2 } from '@blueprintjs/core';
 import * as React from 'react';
 import styled from 'styled-components';
-import { contentRefKey, EventKey, getRelativeRect, RefKey, topicRefKey } from '../../utils';
+import {
+  contentRefKey,
+  EventKey,
+  RefKey,
+  topicRefKey
+} from '../../utils';
 import { DragScrollWidget } from '../common';
 const NodeLayer = styled.div`
   position: relative;
@@ -27,7 +32,6 @@ export interface MindDragScrollWidgetProps {
   setDiagramState: (any) => void;
 }
 
-@HotkeysTarget
 class MindDragScrollWidget<
   P extends MindDragScrollWidgetProps
 > extends React.PureComponent<MindDragScrollWidgetProps> {
@@ -37,7 +41,7 @@ class MindDragScrollWidget<
 
   droppingTopic;
 
-  renderHotkeys() {
+  hotKeys = () => {
     const props = this.props;
     const { controller, model } = props;
     const hotKeys: HotKeysConfig = controller.run('customizeHotKeys', props);
@@ -50,20 +54,22 @@ class MindDragScrollWidget<
     ) {
       throw new TypeError('topicHotKeys and globalHotKeys must be a Map');
     }
-    const children = [];
+    const keys = [];
     if (
       model.focusMode === FocusMode.NORMAL ||
       model.focusMode === FocusMode.SHOW_POPUP
     ) {
-      hotKeys.topicHotKeys.forEach((v, k) => {
-        children.push(<Hotkey key={k} {...v} global />);
+      hotKeys.topicHotKeys.forEach(v => {
+        v.global = true;
+        keys.push(v);
       });
     }
-    hotKeys.globalHotKeys.forEach((v, k) => {
-      children.push(<Hotkey key={k} {...v} global />);
+    hotKeys.globalHotKeys.forEach(v => {
+      v.global = true;
+      keys.push(v);
     });
-    return <Hotkeys>{children}</Hotkeys>;
-  }
+    return keys;
+  };
 
   componentDidMount(): void {
     const { getRef, model, controller } = this.props;
@@ -148,8 +154,10 @@ class MindDragScrollWidget<
       const content = getRef(contentRefKey(topicKey)) as HTMLElement;
       if (content) {
         const contentRect = content.getBoundingClientRect();
-        const x = (contentRect.left - svgRect.left + contentRect.width) / zoomFactor;
-        const y = (contentRect.top - svgRect.top + contentRect.height / 2) / zoomFactor;
+        const x =
+          (contentRect.left - svgRect.left + contentRect.width) / zoomFactor;
+        const y =
+          (contentRect.top - svgRect.top + contentRect.height / 2) / zoomFactor;
         boxes.push({
           key: topicKey,
           rect: { x, y }
@@ -158,21 +166,18 @@ class MindDragScrollWidget<
     }
     let minDist = Infinity;
     let droppingTarget;
-    const pointerX = (e.clientX - svgRect.x) / zoomFactor
-    const pointerY = (e.clientY - svgRect.y) / zoomFactor
+    const pointerX = (e.clientX - svgRect.x) / zoomFactor;
+    const pointerY = (e.clientY - svgRect.y) / zoomFactor;
     for (const box of boxes) {
       const dist =
-        Math.pow(box.rect.x - pointerX, 2) +
-        Math.pow(box.rect.y - pointerY, 2);
+        Math.pow(box.rect.x - pointerX, 2) + Math.pow(box.rect.y - pointerY, 2);
       if (dist < minDist) {
         minDist = dist;
         droppingTarget = box;
       }
     }
     if (droppingTarget) {
-      svgDropEffect.innerHTML = `<g><path stroke="#FCB49A" stroke-width="3" fill="none" d="M ${
-        droppingTarget.rect.x
-      } ${droppingTarget.rect.y} L ${pointerX} ${pointerY}" /></g>`;
+      svgDropEffect.innerHTML = `<g><path stroke="#FCB49A" stroke-width="3" fill="none" d="M ${droppingTarget.rect.x} ${droppingTarget.rect.y} L ${pointerX} ${pointerY}" /></g>`;
     }
     this.droppingTopic = droppingTarget;
   };
@@ -202,36 +207,42 @@ class MindDragScrollWidget<
     const { saveRef, model, controller } = this.props;
     const nodeKey = model.editorRootTopicKey;
     return (
-      <DIV
-        onWheel={this.onWheel}
-        onDragOver={this.onDragOver}
-        onDragEnd={this.onDragEnd}
-        onDrop={this.onDrop}
-      >
-        <DragScrollWidget
-          {...this.state}
-          enableMouseWheel={false}
-          zoomFactor={model.zoomFactor}
-          ref={saveRef(RefKey.DRAG_SCROLL_WIDGET_KEY)}
-        >
-          {(
-            setViewBoxScroll: (left: number, top: number) => void,
-            setViewBoxScrollDelta: (left: number, top: number) => void
-          ) => {
-            const rootWidgetProps = {
-              ...this.props,
-              topicKey: nodeKey,
-              setViewBoxScroll,
-              setViewBoxScrollDelta
-            };
-            return (
-              <NodeLayer ref={saveRef('node-layer')}>
-                {controller.run('renderRootWidget', rootWidgetProps)}
-              </NodeLayer>
-            );
-          }}
-        </DragScrollWidget>
-      </DIV>
+      <HotkeysTarget2 hotkeys={this.hotKeys()}>
+        {({ handleKeyDown, handleKeyUp }) => (
+          <DIV
+            onWheel={this.onWheel}
+            onDragOver={this.onDragOver}
+            onDragEnd={this.onDragEnd}
+            onDrop={this.onDrop}
+            onKeyDown={handleKeyDown}
+            onKeyUp={handleKeyUp}
+          >
+            <DragScrollWidget
+              {...this.state}
+              enableMouseWheel={false}
+              zoomFactor={model.zoomFactor}
+              ref={saveRef(RefKey.DRAG_SCROLL_WIDGET_KEY)}
+            >
+              {(
+                setViewBoxScroll: (left: number, top: number) => void,
+                setViewBoxScrollDelta: (left: number, top: number) => void
+              ) => {
+                const rootWidgetProps = {
+                  ...this.props,
+                  topicKey: nodeKey,
+                  setViewBoxScroll,
+                  setViewBoxScrollDelta
+                };
+                return (
+                  <NodeLayer ref={saveRef('node-layer')}>
+                    {controller.run('renderRootWidget', rootWidgetProps)}
+                  </NodeLayer>
+                );
+              }}
+            </DragScrollWidget>
+          </DIV>
+        )}
+      </HotkeysTarget2>
     );
   }
 }
