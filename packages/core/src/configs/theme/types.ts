@@ -29,6 +29,7 @@ export type ThemeType = {
   name: string;
   background: string;
   highlightColor: string;
+  dropLinkColor?: string;
   randomColor?: boolean;
   marginH: number;
   marginV: number;

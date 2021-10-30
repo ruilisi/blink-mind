@@ -177,7 +177,10 @@ class MindDragScrollWidget<
       }
     }
     if (droppingTarget) {
-      svgDropEffect.innerHTML = `<g><path stroke="#FCB49A" stroke-width="3" fill="none" d="M ${droppingTarget.rect.x} ${droppingTarget.rect.y} L ${pointerX} ${pointerY}" /></g>`;
+      svgDropEffect.innerHTML = `<g><path stroke="${model.config.theme
+        .dropLinkColor || 'blue'}" stroke-width="2" fill="none" d="M ${
+        droppingTarget.rect.x
+      } ${droppingTarget.rect.y} L ${pointerX} ${pointerY}" /></g>`;
     }
     this.droppingTopic = droppingTarget;
   };
