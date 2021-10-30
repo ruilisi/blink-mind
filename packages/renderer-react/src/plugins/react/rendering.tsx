@@ -68,7 +68,7 @@ export function RenderingPlugin() {
       };
       const breadcrumbs = controller.run('renderEditorRootBreadcrumbs', nProps);
       // const styleEditor = controller.run('renderStyleEditor', nProps);
-      const rightTopPanel = controller.run('renderRightTopPanel', nProps);
+      // const rightTopPanel = controller.run('renderRightTopPanel', nProps);
       const modals = controller.run('renderModals', {
         ...nProps,
         zIndex: zIndex + 1
@@ -78,7 +78,7 @@ export function RenderingPlugin() {
         zIndex: zIndex + 1
       });
       const viewportViewer = controller.run('renderViewPortViewer', nProps);
-      return [breadcrumbs, rightTopPanel, modals, drawer, viewportViewer];
+      return [breadcrumbs, modals, drawer, viewportViewer];
     },
 
     renderEditorRootBreadcrumbs(props) {

@@ -10,7 +10,7 @@ export function ReactPlugin(options = {}) {
     RenderingPlugin(),
     UtilsPlugin(),
     ContextMenuPlugin(),
-    RightTopPanelPlugin(),
+    // RightTopPanelPlugin(),
     ToolbarPlugin(),
     DragAndDropPlugin()
   ];
