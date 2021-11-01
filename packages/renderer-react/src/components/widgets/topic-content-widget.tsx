@@ -179,7 +179,7 @@ export class TopicContentWidget extends BaseWidget<Props, State> {
           const menu = this.renderContextMenu();
           if (menu != null) {
             e.preventDefault();
-            ContextMenu.show(this.renderContextMenu(), {
+            ContextMenu.show(menu, {
               left: e.clientX,
               top: e.clientY
             });

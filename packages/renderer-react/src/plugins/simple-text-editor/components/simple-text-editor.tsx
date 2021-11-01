@@ -2,6 +2,7 @@ import { Controller, KeyType, Model } from '@blink-mind/core';
 import debug from 'debug';
 import * as React from 'react';
 import styled from 'styled-components';
+import { ContentEditable } from './content-editable';
 const log = debug('node:text-editor');
 
 interface ContentProps {
@@ -13,15 +14,6 @@ const Content = styled.div<ContentProps>`
   background-color: ${props => (props.readOnly ? null : 'white')};
   cursor: ${props => (props.readOnly ? 'pointer' : 'text')};
   min-width: 50px;
-`;
-
-const Editor = styled.textarea`
-  outline: none;
-  border: none;
-  resize: none;
-  white-space: pre;
-  overflow-wrap: break-word;
-  -webkit-user-modify: read-write-plaintext-only;
 `;
 
 interface Props {
@@ -116,7 +108,7 @@ export class SimpleTextEditor extends React.PureComponent<Props, State> {
     const content = readOnly ? this.getContent() : this.state.content;
     const { onMouseDown, onMouseMove, onKeyDown } = this;
     const editorProps = {
-      value: content,
+      html: content,
       readOnly,
       onChange: this.onChange.bind(this),
       placeholder,
@@ -133,7 +125,10 @@ export class SimpleTextEditor extends React.PureComponent<Props, State> {
     };
     return (
       <Content {...contentProps}>
-        {readOnly ? content : <Editor {...editorProps} autoFocus />}
+        <ContentEditable
+          {...editorProps}
+          autoFocus
+        />
       </Content>
     );
   }
