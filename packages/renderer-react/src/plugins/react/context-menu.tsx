@@ -1,4 +1,4 @@
-import { OpType } from '@blink-mind/core';
+import { createKey, OpType } from '@blink-mind/core';
 import { MenuItem } from '@blueprintjs/core';
 import * as React from 'react';
 import { TopicContextMenu } from '../../components/widgets/topic-context-menu';
@@ -66,7 +66,11 @@ export function ContextMenuPlugin() {
       function onClickItem(item) {
         return function(e) {
           item.opType &&
-            controller.run('operation', { ...ctx, opType: item.opType });
+            controller.run('operation', {
+              ...ctx,
+              newTopicKey: createKey(),
+              opType: item.opType
+            });
         };
       }
       return items.map(item =>

@@ -29,6 +29,10 @@ export type BaseModifierArg = {
   topicKey?: KeyType;
 };
 
+export type AddTopicArg = BaseModifierArg & {
+  newTopicKey?: KeyType;
+};
+
 export type SetTopicArg = BaseModifierArg & {
   topic: Topic;
 };
@@ -142,11 +146,11 @@ function setFocusMode({ model, focusMode }: SetFocusModeArg): ModifierResult {
   return model;
 }
 
-function addChild({ model, topicKey }: BaseModifierArg): ModifierResult {
+function addChild({ model, topicKey, newTopicKey }: AddTopicArg): ModifierResult {
   log('addChild:', topicKey);
   let topic = model.getTopic(topicKey);
   if (topic) {
-    const child = Topic.create({ key: createKey(), parentKey: topic.key });
+    const child = Topic.create({ key: newTopicKey || createKey(), parentKey: topic.key });
     topic = topic
       .set('collapse', false)
       .update('subKeys', subKeys => subKeys.push(child.key));
@@ -162,13 +166,13 @@ function addChild({ model, topicKey }: BaseModifierArg): ModifierResult {
   return model;
 }
 
-function addSibling({ model, topicKey }: BaseModifierArg): ModifierResult {
+function addSibling({ model, topicKey, newTopicKey }: AddTopicArg): ModifierResult {
   if (topicKey === model.rootTopicKey) return model;
   const topic = model.getTopic(topicKey);
   if (topic) {
     const pItem = model.getTopic(topic.parentKey);
     const idx = pItem.subKeys.indexOf(topicKey);
-    const sibling = Topic.create({ key: createKey(), parentKey: pItem.key });
+    const sibling = Topic.create({ key: newTopicKey || createKey(), parentKey: pItem.key });
     model = model
       .update('topics', topics => topics.set(sibling.key, sibling))
       .updateIn(['topics', pItem.key, 'subKeys'], subKeys =>

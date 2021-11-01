@@ -1,4 +1,4 @@
-import { OpType } from '@blink-mind/core';
+import { createKey, OpType } from '@blink-mind/core';
 
 import { HotKeyItem, HotKeyName, HotKeysConfig } from '../types';
 
@@ -6,6 +6,9 @@ function op(opType: string, props) {
   const { topicKey, model, controller } = props;
   if (topicKey === undefined) {
     props = { ...props, topicKey: model.focusKey };
+  }
+  if (opType === OpType.ADD_CHILD || opType === OpType.ADD_SIBLING) {
+    props = { ...props, newTopicKey: createKey() };
   }
   controller.run('operation', { ...props, opType });
 }
