@@ -27,6 +27,7 @@ export type ModifierArg =
 export type BaseModifierArg = {
   model: Model;
   topicKey?: KeyType;
+  passive?: boolean;
 };
 
 export type AddTopicArg = BaseModifierArg & {
@@ -146,7 +147,7 @@ function setFocusMode({ model, focusMode }: SetFocusModeArg): ModifierResult {
   return model;
 }
 
-function addChild({ model, topicKey, newTopicKey }: AddTopicArg): ModifierResult {
+function addChild({ model, topicKey, newTopicKey, passive }: AddTopicArg): ModifierResult {
   log('addChild:', topicKey);
   let topic = model.getTopic(topicKey);
   if (topic) {
@@ -157,6 +158,7 @@ function addChild({ model, topicKey, newTopicKey }: AddTopicArg): ModifierResult
     model = model.update('topics', topics =>
       topics.set(topicKey, topic).set(child.key, child)
     );
+    if (passive) return model;
     return focusTopic({
       model,
       topicKey: child.key,
@@ -166,7 +168,7 @@ function addChild({ model, topicKey, newTopicKey }: AddTopicArg): ModifierResult
   return model;
 }
 
-function addSibling({ model, topicKey, newTopicKey }: AddTopicArg): ModifierResult {
+function addSibling({ model, topicKey, newTopicKey, passive }: AddTopicArg): ModifierResult {
   if (topicKey === model.rootTopicKey) return model;
   const topic = model.getTopic(topicKey);
   if (topic) {
@@ -178,6 +180,7 @@ function addSibling({ model, topicKey, newTopicKey }: AddTopicArg): ModifierResu
       .updateIn(['topics', pItem.key, 'subKeys'], subKeys =>
         subKeys.insert(idx + 1, sibling.key)
       );
+    if (passive) return model;
     return focusTopic({
       model,
       topicKey: sibling.key,
@@ -226,6 +229,7 @@ function setBlockData({
   topicKey,
   blockType,
   focusMode,
+  passive,
   data
 }: SetBlockDataArg): ModifierResult {
   const topic = model.getTopic(topicKey);
@@ -248,7 +252,7 @@ function setBlockData({
         );
       }
     }
-    if (focusMode) {
+    if (focusMode && !passive) {
       model = focusTopic({
         model,
         topicKey,
