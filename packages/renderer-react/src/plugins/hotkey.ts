@@ -18,6 +18,7 @@ export function HotKeyPlugin() {
     customizeHotKeys(props): HotKeysConfig {
       const handleKeyDown = opType => e => {
         // log('HotKeyPlugin', opType);
+        e.preventDefault();
         op(opType, props);
       };
       const topicHotKeys = new Map<string, HotKeyItem>([

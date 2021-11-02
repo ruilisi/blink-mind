@@ -1,5 +1,5 @@
 import { createKey, OpType } from '@blink-mind/core';
-import { MenuItem } from '@blueprintjs/core';
+import { ContextMenu, MenuItem } from '@blueprintjs/core';
 import * as React from 'react';
 import { TopicContextMenu } from '../../components/widgets/topic-context-menu';
 import { I18nKey, Icon, getI18nText } from '../../utils';
@@ -65,12 +65,15 @@ export function ContextMenuPlugin() {
       const isRoot = topicKey === model.editorRootTopicKey;
       function onClickItem(item) {
         return function(e) {
-          item.opType &&
+          if (item.opType) {
             controller.run('operation', {
               ...ctx,
               newTopicKey: createKey(),
               opType: item.opType
             });
+            e.stopPropagation();
+            ContextMenu.hide();
+          }
         };
       }
       return items.map(item =>
