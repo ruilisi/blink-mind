@@ -23,7 +23,8 @@
     "build": "rollup --config rollup.config.js",
     "debug-build": "node --inspect-brk ./node_modules/.bin/rollup --config rollup.config.js",
     "link-package": "cd support && sh yarn-link.sh link",
-    "unlink-package": "cd support && sh yarn-link.sh unlink"
+    "unlink-package": "cd support && sh yarn-link.sh unlink",
+    "release-pack": "yarn build && cd packages && tar zcf core.tgz core/lib core/package.json && tar zcf renderer-react.tgz renderer-react/lib renderer-react/package.json"
   },
   "dependencies": {
     "@blueprintjs/core": "^3.19.1"
