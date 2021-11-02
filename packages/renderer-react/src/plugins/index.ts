@@ -10,7 +10,7 @@ import { SimpleTextEditorPlugin } from './simple-text-editor';
 import { StylePlugin } from './style';
 import { ThemePlugin } from './theme';
 
-export function DefaultPlugin() {
+export function DefaultPlugin(): any {
   return [
     ReactPlugin(),
     LayoutPlugin(),

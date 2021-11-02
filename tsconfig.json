@@ -41,9 +41,7 @@
     { "path": "./packages/renderer-react" },
     { "path": "./packages/plugin-json-serializer" },
     { "path": "./packages/plugins" },
-    { "path": "./packages/plugin-rich-text-editor" },
-    { "path": "./packages/plugin-theme-selector" },
-    { "path": "./packages/plugin-topology-diagram" }
+    { "path": "./packages/plugin-theme-selector" }
   ],
   "include": ["packages/*/src", "stories/"],
   "exclude": ["node_modules", "**/*.spec.ts", "./dist", "**/*.test.ts"]

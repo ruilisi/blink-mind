@@ -112,12 +112,9 @@ export function I18nPlugin() {
   ]);
 
   return {
-    getI18nTextMap() {
-      return i18nTextMap;
-    },
     getI18nText(ctx) {
-      const { controller, key } = ctx;
-      const m = controller.run('getI18nTextMap', ctx);
+      const { key } = ctx;
+      const m = i18nTextMap;
       if (!m.has(key)) {
         throw new Error(`i18n key ${key} is not exist`);
       }
