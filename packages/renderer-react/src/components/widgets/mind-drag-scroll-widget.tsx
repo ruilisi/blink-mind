@@ -3,12 +3,7 @@ import { HotKeysConfig } from '../../types';
 import { HotkeysTarget2 } from '@blueprintjs/core';
 import * as React from 'react';
 import styled from 'styled-components';
-import {
-  contentRefKey,
-  EventKey,
-  RefKey,
-  topicRefKey
-} from '../../utils';
+import { contentRefKey, EventKey, RefKey, topicRefKey } from '../../utils';
 import { DragScrollWidget } from '../common';
 const NodeLayer = styled.div`
   position: relative;
@@ -143,9 +138,13 @@ class MindDragScrollWidget<
     const boxes = [];
     const svgDropEffect = getRef('svg-drop-effect') as HTMLElement;
     const zoomFactor = controller.run('getZoomFactor', this.props);
-    if (!svgDropEffect) return;
+    const rootContent = getRef(
+      contentRefKey(model.rootTopicKey)
+    ) as HTMLElement;
+    if (!svgDropEffect || !rootContent) return;
 
     const svgRect = svgDropEffect.getBoundingClientRect();
+    const rootRect = rootContent.getBoundingClientRect();
     for (const topicKey of model.topics.keys()) {
       if (model.focusKey === topicKey) {
         // skip self
@@ -154,8 +153,13 @@ class MindDragScrollWidget<
       const content = getRef(contentRefKey(topicKey)) as HTMLElement;
       if (content) {
         const contentRect = content.getBoundingClientRect();
-        const x =
-          (contentRect.left - svgRect.left + contentRect.width) / zoomFactor;
+        let x = contentRect.left - svgRect.left;
+        if (contentRect.left > rootRect.left) {
+          x += contentRect.width;
+        } else if (contentRect.left === rootRect.left) {
+          x += contentRect.width / 2;
+        }
+        x /= zoomFactor;
         const y =
           (contentRect.top - svgRect.top + contentRect.height / 2) / zoomFactor;
         boxes.push({

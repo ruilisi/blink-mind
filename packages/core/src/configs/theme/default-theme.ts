@@ -4,7 +4,7 @@ export const defaultTheme: ThemeType = {
   name: 'default',
   randomColor: false,
   background: 'rgb(242,242,242)',
-  highlightColor: '#50C9CE',
+  highlightColor: '#bbb',
   dropLinkColor: 'rgb(8,170,255)',
   marginH: 60,
   marginV: 20,
