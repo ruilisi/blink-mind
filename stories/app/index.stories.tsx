@@ -1,7 +1,6 @@
+import { Model } from '@blink-mind/core';
 import { JsonSerializerPlugin } from '@blink-mind/plugin-json-serializer';
-import RichTextEditorPlugin from '@blink-mind/plugin-rich-text-editor';
 import { ThemeSelectorPlugin } from '@blink-mind/plugin-theme-selector';
-import TopologyDiagramPlugin from '@blink-mind/plugin-topology-diagram';
 import {
   ExportFilePlugin,
   OpenFilePlugin,
@@ -62,17 +61,17 @@ function ChangeThemePlugin() {
 }
 
 const plugins = [
-  RichTextEditorPlugin(),
-  ThemeSelectorPlugin(),
-  TopicReferencePlugin(),
-  SearchPlugin(),
-  OpenFilePlugin(),
-  ExportFilePlugin(),
-  UndoRedoPlugin(),
-  TagsPlugin(),
-  ChangeThemePlugin(),
-  TopologyDiagramPlugin(),
-  JsonSerializerPlugin()
+  // RichTextEditorPlugin(),
+  // ThemeSelectorPlugin(),
+  // TopicReferencePlugin(),
+  // SearchPlugin(),
+  // OpenFilePlugin(),
+  // ExportFilePlugin(),
+  // UndoRedoPlugin(),
+  // TagsPlugin(),
+  // ChangeThemePlugin(),
+  // TopologyDiagramPlugin(),
+  // JsonSerializerPlugin()
 ];
 
 class AppDemo extends BaseDemo {
@@ -81,7 +80,55 @@ class AppDemo extends BaseDemo {
   }
 
   initModel() {
-    this.state = { model: null };
+    this.state = {
+      model: Model.create({
+        rootTopicKey: 'root',
+        topics: [
+          {
+            key: 'root',
+            blocks: [{ type: 'CONTENT', data: 'MainTopic' }],
+            subKeys: ['sub1', 'sub2']
+          },
+          {
+            key: 'sub1',
+            parentKey: 'root',
+            blocks: [{ type: 'CONTENT', data: 'SubTopic1' }],
+            subKeys: ['sub1_1', 'sub1_2'],
+            collapse: false
+          },
+          {
+            key: 'sub1_1',
+            parentKey: 'sub1',
+            blocks: [{ type: 'CONTENT', data: 'SubTopic' }],
+            collapse: false
+          },
+          {
+            key: 'sub1_2',
+            parentKey: 'sub1',
+            blocks: [{ type: 'CONTENT', data: 'SubTopic' }],
+            collapse: false
+          },
+          {
+            key: 'sub2',
+            subKeys: ['sub2_1', 'sub2_2'],
+            parentKey: 'root',
+            blocks: [{ type: 'CONTENT', data: 'SubTopic2' }]
+          },
+          {
+            key: 'sub2_1',
+            parentKey: 'sub2',
+            blocks: [{ type: 'CONTENT', data: 'SubTopic' }],
+            collapse: false
+          },
+          {
+            key: 'sub2_2',
+            parentKey: 'sub2',
+            blocks: [{ type: 'CONTENT', data: 'SubTopic' }],
+            collapse: false
+          }
+        ]
+      })
+    };
   }
 
   diagram;
