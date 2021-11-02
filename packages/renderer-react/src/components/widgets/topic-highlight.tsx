@@ -34,6 +34,12 @@ export class TopicHighlight extends BaseWidget<BaseProps, State> {
       return;
     }
     const content = getRef(contentRefKey(focusKey));
+    if (!content) {
+      this.setState({
+        content: null
+      });
+      return;
+    }
     const bigView = getRef(RefKey.DRAG_SCROLL_WIDGET_KEY).bigView;
     const svg = getRef(RefKey.SVG_HIGHLIGHT_KEY);
     const contentRect = getRelativeRect(content, bigView, zoomFactor);
