@@ -11,7 +11,7 @@ import { TopicCollapseIcon } from '../../components/widgets/topic-collapse-icon'
 import { TopicContent } from '../../components/widgets/topic-content';
 import { TopicContentWidget } from '../../components/widgets/topic-content-widget';
 import { TopicDesc } from '../../components/widgets/topic-desc';
-import { TopicHighlight } from '../../components/widgets/topic-highlight';
+import { TopicFocusedTools } from '../../components/widgets/topic-focused-tools';
 import { TopicSubLinks } from '../../components/widgets/topic-sub-links';
 import { TopicWidget } from '../../components/widgets/topic-widget';
 import { ViewPortViewer } from '../../components/widgets/view-port-util';
@@ -178,10 +178,10 @@ export function RenderingPlugin() {
       return <RootSubLinks ref={saveRef(linksRefKey(topicKey))} {...props} />;
     },
 
-    renderFocusItemHighlight(props) {
+    renderFocusItemTools(props) {
       const { saveRef } = props;
       return (
-        <TopicHighlight ref={saveRef(RefKey.FOCUS_HIGHLIGHT_KEY)} {...props} />
+        <TopicFocusedTools ref={saveRef(RefKey.FOCUS_TOOL_KEY)} {...props} />
       );
     },
 
@@ -192,7 +192,7 @@ export function RenderingPlugin() {
       return (
         <>
           {controller.run('renderRootSubLinks', props)}
-          {controller.run('renderFocusItemHighlight', props)}
+          {controller.run('renderFocusItemTools', props)}
           {controller.run('renderDragAndDropEffect', props)}
         </>
       );

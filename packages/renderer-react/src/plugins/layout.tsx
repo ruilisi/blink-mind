@@ -11,7 +11,7 @@ import {
 } from '@blink-mind/core';
 import { RootSubLinks } from '../components/widgets/root-sublinks';
 import { TopicDropEffect } from '../components/widgets/topic-drop-effect';
-import { TopicHighlight } from '../components/widgets/topic-highlight';
+import { TopicFocusedTools } from '../components/widgets/topic-focused-tools';
 import { TopicWidget } from '../components/widgets/topic-widget';
 import { MoveTopicDir } from '../types';
 import {
@@ -75,7 +75,7 @@ export function LayoutPlugin() {
       const links = getRef(
         linksRefKey(model.editorRootTopicKey)
       ) as RootSubLinks;
-      const highlight = getRef(RefKey.FOCUS_HIGHLIGHT_KEY) as TopicHighlight;
+      const highlight = getRef(RefKey.FOCUS_TOOL_KEY) as TopicFocusedTools;
       const dropEffect = getRef(RefKey.DROP_EFFECT_KEY) as TopicDropEffect;
       links && links.layout();
       highlight && highlight.layout();

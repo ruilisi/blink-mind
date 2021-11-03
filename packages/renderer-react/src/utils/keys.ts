@@ -38,7 +38,7 @@ export const RefKey = {
   DIAGRAM_ROOT_KEY: 'DIAGRAM-ROOT',
   DRAG_SCROLL_WIDGET_KEY: 'DragScrollWidget',
   SVG_HIGHLIGHT_KEY: 'svg-highlight',
-  FOCUS_HIGHLIGHT_KEY: 'focus-highlight',
+  FOCUS_TOOL_KEY: 'focus-tool',
   DROP_EFFECT_KEY: 'drop-effect'
 };
 export const EventKey = {
