@@ -32,3 +32,25 @@ yarn storybook
 ```
 
 then open http://localhost:6007/
+
+### Release packages
+
+```
+git checkout release
+git reset --hard master
+yarn release-pack
+git add .
+git commit -m "Release"
+git push -f
+```
+
+### Use packages
+
+Update package.json in your project
+
+(xxxxxxxxxx is the release commit hash)
+
+```
+"@blink-mind/core": "https://cdn.jsdelivr.net/gh/ruilisi/blink-mind@xxxxxxxxxx/packages/core.tgz",
+"@blink-mind/renderer-react": "https://cdn.jsdelivr.net/gh/ruilisi/blink-mind@xxxxxxxxxx/packages/renderer-react.tgz",
+```
