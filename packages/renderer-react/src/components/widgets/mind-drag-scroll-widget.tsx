@@ -15,7 +15,10 @@ const NodeLayer = styled.div`
 const DIV = styled.div`
   width: 100%;
   height: 100%;
-  background: ${props => props.theme.background};
+  background-color: ${props => props.theme.background};
+  background-image: radial-gradient(rgb(241, 243, 246) 10%, transparent 10%);
+  background-position: 0 0, 20px 20px;
+  background-size: 40px 40px;
 `;
 
 export interface MindDragScrollWidgetProps {

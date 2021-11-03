@@ -20,6 +20,7 @@ export type ModifierArg =
   | SetBlockDataArg
   | SetFocusModeArg
   | SetTopicStyleArg
+  | SetTopicColorArg
   | SetZoomFactorArg
   | SetThemeArg
   | SetLayoutDirArg;
@@ -54,6 +55,10 @@ export type SetFocusModeArg = BaseModifierArg & {
 
 export type SetTopicStyleArg = BaseModifierArg & {
   style: string;
+};
+
+export type SetTopicColorArg = BaseModifierArg & {
+  color: string;
 };
 
 export type SetZoomFactorArg = BaseModifierArg & {
@@ -295,6 +300,20 @@ function setStyle({
   return model;
 }
 
+function setColor({
+  model,
+  topicKey,
+  color
+}: SetTopicColorArg): ModifierResult {
+  const topic = model.getTopic(topicKey);
+  if (topic) {
+    if (color !== topic.color) {
+      model = model.updateIn(['topics', topicKey, 'color'], s => color);
+    }
+  }
+  return model;
+}
+
 function clearAllCustomStyle({ model }: BaseModifierArg): ModifierResult {
   model = model.withMutations(model => {
     model.topics.keySeq().forEach(key => {
@@ -348,6 +367,7 @@ export default {
   setBlockData,
   deleteBlock,
   setStyle,
+  setColor,
   clearAllCustomStyle,
   setTheme,
   setLayoutDir,

@@ -78,15 +78,10 @@ export function StylePlugin() {
 
       const topic = model.getTopic(topicKey);
 
-      if (topic.parentKey != null) {
-        const parentSubLinkStyle = controller.run('getSubLinkStyle', {
-          ...props,
-          topicKey: topic.parentKey
-        });
-
+      if (topic.color) {
         linkStyle = {
           ...linkStyle,
-          ...parentSubLinkStyle
+          lineColor: topic.color
         };
       }
 
@@ -117,13 +112,10 @@ export function StylePlugin() {
       subLinkStyle = { ...subLinkStyle, ...presetStyle };
 
       const topic = model.getTopic(topicKey);
-      // 获取父节点的color
-      if (theme.randomColor) {
-        const randomColor = controller.run('getRandomColor', props);
-        log(randomColor);
+      if (topic.color) {
         subLinkStyle = {
           ...subLinkStyle,
-          lineColor: randomColor
+          lineColor: topic.color
         };
       }
 

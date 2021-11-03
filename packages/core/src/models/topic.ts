@@ -11,6 +11,7 @@ type TopicRecordType = {
   blocks?: List<Block>;
   relations?: List<Relation>;
   style?: string;
+  color?: string;
 };
 
 type CreateTopicArg = {
@@ -29,7 +30,8 @@ const defaultTopicRecord: TopicRecordType = {
   subKeys: null,
   blocks: null,
   relations: null,
-  style: null
+  style: null,
+  color: null
 };
 
 export class Topic extends Record(defaultTopicRecord) {
@@ -53,6 +55,9 @@ export class Topic extends Record(defaultTopicRecord) {
   }
   get style() {
     return this.get('style');
+  }
+  get color() {
+    return this.get('color');
   }
 
   getBlock(type: string): { index: number; block: Block } {

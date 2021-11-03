@@ -11,6 +11,7 @@ export function I18nPlugin() {
     [I18nKey.ONLY_RIGHT, 'Only Right'],
 
     [I18nKey.EDIT, 'Edit'],
+    [I18nKey.CREATE_TASK, 'Create Task'],
     [I18nKey.ADD_CHILD, 'Add Child'],
     [I18nKey.ADD_SIBLING, 'Add Sibling'],
     [I18nKey.EDIT_NOTES, 'Edit Notes'],
