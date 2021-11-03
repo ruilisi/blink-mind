@@ -10,55 +10,24 @@ export const defaultTheme: ThemeType = {
   marginV: 20,
 
   contentStyle: {
-    lineHeight: '1.5'
+    lineHeight: '1.5',
+    fontWeight: '600',
+    border: '2.5px solid #e8ebf0',
+    borderRadius: '10px',
+    background: 'white',
+    color: 'black',
+    padding: '0px 10px',
+    boxShadow: '-1px 4px 5px #f2f3f4',
   },
 
   linkStyle: {
     lineRadius: 5,
     lineType: 'curve',
-    lineWidth: '3px'
+    lineWidth: '3px',
+    lineColor: 'black',
   },
 
-  rootTopic: {
-    contentStyle: {
-      fontSize: '26px',
-      borderRadius: '45px',
-      background: 'rgb(8,170,255)',
-      color: 'white',
-      padding: '14px 16px 14px 16px'
-    },
-    subLinkStyle: {
-      lineType: 'curve',
-      lineWidth: '2px',
-      lineColor: '#bbb'
-    }
-  },
-  primaryTopic: {
-    contentStyle: {
-      borderRadius: '30px',
-      border: '2px solid rgb(8,170,255)',
-      background: 'white',
-      fontSize: '17px',
-      padding: '10px 15px 10px 15px'
-    },
-
-    subLinkStyle: {
-      lineType: 'curve',
-      lineWidth: '2px',
-      lineColor: '#bbb'
-    }
-  },
-
-  normalTopic: {
-    contentStyle: {
-      fontSize: '17px',
-      padding: '4px 10px'
-    },
-
-    subLinkStyle: {
-      lineType: 'curve',
-      lineWidth: '2px',
-      lineColor: '#bbb'
-    }
-  }
+  rootTopic: {},
+  primaryTopic: {},
+  normalTopic: {}
 };
