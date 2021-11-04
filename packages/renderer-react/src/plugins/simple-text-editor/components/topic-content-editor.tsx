@@ -28,14 +28,26 @@ export class TopicContentEditor extends SimpleTextEditor {
   }
 
   onKeyDown = e => {
-    if (e.nativeEvent.ctrlKey && e.nativeEvent.code === 'Enter') {
+    if (e.nativeEvent.code === 'Enter') {
       this.save();
     }
   };
 
   onClickOutSide(e) {
     log('onClickOutSide');
-    this.save();
+    if (!this.props.readOnly) {
+      this.save();
+    }
+    else if (!e.defaultPrevented && this.props.readOnly) {
+      const { model, topicKey, controller } = this.props;
+      if (model.focusKey === topicKey) {
+        controller.run('operation', {
+          ...this.props,
+          opType: OpType.FOCUS_TOPIC,
+          topicKey: null
+        });
+      }
+    }
   }
 
   save() {

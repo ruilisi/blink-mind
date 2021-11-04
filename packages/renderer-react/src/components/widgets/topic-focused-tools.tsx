@@ -153,7 +153,10 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
     const topic = model.getTopic(model.focusKey);
     return (
       <>
-        <FocusHighlightContainer ref={saveRef(RefKey.SVG_HIGHLIGHT_KEY)}>
+        <FocusHighlightContainer
+          ref={saveRef(RefKey.SVG_HIGHLIGHT_KEY)}
+          onClick={e => e.preventDefault()} // 告知onClickOutSide不要处理
+        >
           {this.state.rect && (
             <>
               <FocusSvg>

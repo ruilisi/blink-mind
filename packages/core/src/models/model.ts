@@ -46,12 +46,6 @@ export class Model extends Record(defaultModelRecord) {
       res = Model.fromJSON(attrs);
     }
     if (res) {
-      if (res.focusKey == null) {
-        res = res.set('focusKey', res.rootTopicKey);
-      }
-      if (res.focusMode == null) {
-        res = res.set('focusMode', FocusMode.NORMAL);
-      }
       return res;
     }
 

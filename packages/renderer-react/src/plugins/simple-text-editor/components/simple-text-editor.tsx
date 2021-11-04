@@ -49,14 +49,14 @@ export class SimpleTextEditor extends React.PureComponent<Props, State> {
   onKeyDown = e => {};
 
   componentDidMount() {
-    const { readOnly } = this.props;
-    if (readOnly) return;
+    // const { readOnly } = this.props;
+    // if (readOnly) return;
     document.addEventListener('click', this._handleClick);
   }
 
   componentWillUnmount() {
-    const { readOnly } = this.props;
-    if (readOnly) return;
+    // const { readOnly } = this.props;
+    // if (readOnly) return;
     document.removeEventListener('click', this._handleClick);
   }
 
