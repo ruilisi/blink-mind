@@ -1,4 +1,4 @@
-import { FocusMode, OpType, TopicDirection } from '@blink-mind/core';
+import { DiagramLayoutType, FocusMode, OpType, TopicDirection } from '@blink-mind/core';
 import { ContextMenu } from '@blueprintjs/core';
 import debug from 'debug';
 import * as React from 'react';
@@ -201,7 +201,10 @@ export class TopicContentWidget extends BaseWidget<Props, State> {
           {controller.run('renderTopicContentOthers', props)}
         </TopicContent>
         {/* {nextDropArea} */}
-        {dir !== TopicDirection.MAIN && collapseIcon}
+        {((dir === TopicDirection.MAIN &&
+          model.config.layoutDir !== DiagramLayoutType.LEFT_AND_RIGHT) ||
+          dir !== TopicDirection.MAIN) &&
+          collapseIcon}
       </TopicContentWithDropArea>
     );
   }

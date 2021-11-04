@@ -51,7 +51,7 @@ export class RootSubLinks extends BaseWidget<Props, State> {
     };
 
     p1 = {
-      x: contentRect.right - svgRect.left + 20,
+      x: contentRect.right - svgRect.left + 30,
       y: centerY(contentRect) - svgRect.top
     };
     const curves = [];

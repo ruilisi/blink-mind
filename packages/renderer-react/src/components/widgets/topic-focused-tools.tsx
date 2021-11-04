@@ -18,6 +18,7 @@ const FocusHighlightContainer = styled.div`
 const FocusSvg = styled.svg`
   width: 100%;
   height: 100%;
+  overflow: visible;
 `;
 
 const Toolbar = styled.div`
@@ -131,8 +132,12 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
     const padding = 3;
     const x = contentRect.left - svgRect.left - padding;
     const y = contentRect.top - svgRect.top - padding;
-    const width = contentRect.width + 2 * padding;
+    let width = contentRect.width + 2 * padding;
     const height = contentRect.height + 2 * padding;
+    const topic = model.getTopic(focusKey)
+    if (!topic.subKeys.isEmpty()) {
+      width += 30;
+    }
     this.setState({
       rect: {
         x,
