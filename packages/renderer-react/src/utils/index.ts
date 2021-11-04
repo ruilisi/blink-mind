@@ -25,6 +25,10 @@ export function centerPointY(p1, p2) {
   return (p1.y + p2.y) / 2;
 }
 
+export function twentyPointX(p1, p2) {
+  return p1.x + (p1.x + p2.x) / 20;
+}
+
 export function center(rect) {
   return [(rect.left + rect.right) / 2, (rect.top + rect.bottom) / 2];
 }

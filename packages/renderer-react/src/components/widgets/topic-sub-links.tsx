@@ -10,7 +10,8 @@ import {
   getRelativeRect,
   linksSvgRefKey,
   Point,
-  RefKey
+  RefKey,
+  twentyPointX
 } from '../../utils';
 import { BaseProps, BaseWidget } from '../common';
 
@@ -101,10 +102,10 @@ export class TopicSubLinks extends BaseWidget<Props, State> {
       const { lineType } = linkStyle;
 
       if (lineType === 'curve') {
-        curve = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} C ${p2.x} ${centerPointY(
+        curve = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} C ${twentyPointX(
           p2,
           p3
-        )} ${centerPointX(p2, p3)} ${p3.y} ${p3.x} ${p3.y}`;
+        )} ${p2.y} ${centerPointX(p2, p3)} ${p3.y} ${p3.x} ${p3.y}`;
       } else if (lineType === 'round') {
         const vDir = p3.y > p1.y ? 1 : -1;
         const hDir = p3.x > p1.x ? 1 : -1;

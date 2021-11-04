@@ -1,13 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import {
-  centerPointX,
-  centerPointY,
-  centerX,
   centerY,
   getRelativeRect,
   Point,
-  RefKey
+  RefKey,
+  twentyPointX
 } from '../../utils';
 import { BaseProps, BaseWidget } from '../common';
 
@@ -45,10 +43,15 @@ export class RootSubLinks extends BaseWidget<Props, State> {
     const bigView = getRef(RefKey.DRAG_SCROLL_WIDGET_KEY).bigView;
     const contentRect = getRelativeRect(content, bigView, zoomFactor);
     const svgRect = getRelativeRect(svg, bigView, zoomFactor);
-    let p1: Point, p2: Point;
+    let p0: Point, p1: Point, p2: Point;
+
+    p0 = {
+      x: contentRect.right - svgRect.left,
+      y: centerY(contentRect) - svgRect.top
+    };
 
     p1 = {
-      x: centerX(contentRect) - svgRect.left,
+      x: contentRect.right - svgRect.left + 20,
       y: centerY(contentRect) - svgRect.top
     };
     const curves = [];
@@ -74,10 +77,10 @@ export class RootSubLinks extends BaseWidget<Props, State> {
       p2 = { x: p2.x - svgRect.left, y: p2.y - svgRect.top };
       let curve;
       if (lineType === 'curve') {
-        curve = `M ${p1.x} ${p1.y} C ${p1.x} ${centerPointY(
+        curve = `M ${p0.x} ${p0.y} L ${p1.x} ${p1.y} C ${twentyPointX(
           p1,
           p2
-        )} ${centerPointX(p1, p2)} ${p2.y} ${p2.x} ${p2.y}`;
+        )} ${p1.y} ${twentyPointX(p1, p2)} ${p2.y} ${p2.x} ${p2.y} `;
       } else if (lineType === 'line') {
         curve = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`;
       } else if (lineType === 'round') {
