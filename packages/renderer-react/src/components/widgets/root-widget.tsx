@@ -27,7 +27,6 @@ const Topic = styled.div`
   display: flex;
   position: relative;
   align-items: center;
-  z-index: 3;
 `;
 
 interface Props extends BaseProps {
