@@ -10,7 +10,7 @@ export const defaultTheme: ThemeType = {
   marginV: 20,
 
   contentStyle: {
-    fontWeight: '600',
+    fontWeight: '500',
     border: '1.5px solid rgb(233,235,241)',
     borderRadius: '7px',
     background: 'white',

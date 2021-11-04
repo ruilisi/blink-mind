@@ -25,7 +25,7 @@ const FocusSvg = styled.svg`
 `;
 
 const Toolbar = styled.div`
-  font-weight: 600;
+  font-weight: 500;
   border: 1.5px solid rgb(233, 235, 241);
   border-radius: 7px;
   background: white;
@@ -96,6 +96,7 @@ const ColorLabel = styled.div`
     border-radius: 4px;
     margin-top: 2px;
     cursor: pointer;
+    justify-content: center;
     &:hover {
       width: 16px;
       height: 16px;
@@ -107,10 +108,10 @@ const ColorLabel = styled.div`
 
 const ColorsWrapper = styled.div`
   justify-content: center;
-  padding: 10px;
+  padding: 8px;
   display: flex;
   > div {
-    max-width: 220px;
+    max-width: 100%;
     display: flex;
     flex-wrap: wrap;
     gap: 12px 6px;
@@ -125,23 +126,18 @@ const ColorsWrapper = styled.div`
 `;
 
 const Checked = styled.span`
-  top: 0;
-  left: 0;
-  display: flex;
   cursor: pointer;
   font-weight: 300;
   color: gray;
-  font-size: 18px;
-  position: absolute;
+  font-size: 12px;
   color: white;
-  align-items: center;
 `;
 
 const ColorPicker = styled.div`
   background: #f9f9f9;
   padding-bottom: 10px;
   .chrome-picker {
-    width: 250px !important;
+    width: 100% !important;
     background: #f9f9f9 !important;
     box-shadow: none !important;
   }
@@ -161,24 +157,10 @@ const SaveButton = styled.div`
   cursor: pointer;
 `;
 
-const DeleteIcon = (
-  <svg
-    fill="rgb(253,113,175)"
-    viewBox="0 0 1024 1024"
-    width={20}
-    height={20}
-    style={{ verticalAlign: 'middle' }}
-  >
-    <path d="M768 384c-19.2 0-32 12.8-32 32l0 377.6c0 25.6-19.2 38.4-38.4 38.4L326.4 832c-25.6 0-38.4-19.2-38.4-38.4L288 416C288 396.8 275.2 384 256 384S224 396.8 224 416l0 377.6c0 57.6 44.8 102.4 102.4 102.4l364.8 0c57.6 0 102.4-44.8 102.4-102.4L793.6 416C800 396.8 787.2 384 768 384z"></path>
-    <path d="M460.8 736l0-320C460.8 396.8 448 384 435.2 384S396.8 396.8 396.8 416l0 320c0 19.2 12.8 32 32 32S460.8 755.2 460.8 736z"></path>
-    <path d="M627.2 736l0-320C627.2 396.8 608 384 588.8 384S563.2 396.8 563.2 416l0 320C563.2 755.2 576 768 588.8 768S627.2 755.2 627.2 736z"></path>
-    <path d="M832 256l-160 0L672 211.2C672 166.4 633.6 128 588.8 128L435.2 128C390.4 128 352 166.4 352 211.2L352 256 192 256C172.8 256 160 268.8 160 288S172.8 320 192 320l640 0c19.2 0 32-12.8 32-32S851.2 256 832 256zM416 211.2C416 198.4 422.4 192 435.2 192l153.6 0c12.8 0 19.2 6.4 19.2 19.2L608 256l-192 0L416 211.2z"></path>
-  </svg>
-);
-
 interface State {
   rect: any;
   color: string;
+  colorBarBottom: number;
   displayColor: boolean;
   displayColorPicker: boolean;
 }
@@ -204,6 +186,7 @@ const defaultColor = [
 export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
   state = {
     rect: null,
+    colorBarBottom: 0,
     color: 'black',
     displayColor: false,
     displayColorPicker: false
@@ -235,7 +218,7 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
     const padding = 3;
     const x = contentRect.left - svgRect.left - padding;
     const y = contentRect.top - svgRect.top - padding;
-    const bottom =
+    const colorBarBottom =
       svgRect.bottom - contentRect.bottom + contentRect.height + 2 * padding;
     let width = contentRect.width + 2 * padding;
     const height = contentRect.height + 2 * padding;
@@ -244,11 +227,11 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
       width += 30;
     }
     this.setState({
-      color: `${topic?.color || 'black'}`,
+      color: `${(topic && topic.color) || 'black'}`,
+      colorBarBottom,
       rect: {
         x,
         y,
-        bottom,
         width,
         height
       }
@@ -272,7 +255,7 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
     });
   };
 
-  handleClick = () => {
+  handlePickButtonClick = () => {
     this.setState({ displayColorPicker: !this.state.displayColorPicker });
   };
 
@@ -290,9 +273,9 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
     this.handleColorClose();
   };
 
-  onChangeComplete = (color: { hex: string }) => {
+  onColorChange = (color: { hex: string }) => {
     this.setState({ color: color.hex });
-    debounce(this.changeLinkColor(color.hex), 1000);
+    this.changeLinkColor(color.hex);
   };
 
   render() {
@@ -316,58 +299,69 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
                   strokeWidth={2}
                 />
               </FocusSvg>
-              {this.state.displayColor ? (
+              {this.state.displayColor && (
                 <Toolbar
                   ref={e => (this.toolbarRef = e)}
                   style={{
                     padding: 0,
                     zIndex: 10,
-                    width: '51%',
+                    width: '100%',
+                    maxWidth: '250px',
                     left: this.state.rect.x + this.state.rect.width - 20,
-                    bottom: this.state.rect.bottom + 40
+                    bottom: this.state.colorBarBottom + 40
                   }}
                 >
-                  {this.state.displayColorPicker ? (
+                  {this.state.displayColorPicker && (
                     <ColorPicker>
                       <ChromePicker
                         disableAlpha
                         color={this.state.color}
-                        onChangeComplete={this.onChangeComplete}
+                        onChangeComplete={this.onColorChange}
                       />
                       <SaveButton onClick={() => this.handleSaveColor()}>
                         Save
                       </SaveButton>
                     </ColorPicker>
-                  ) : null}
+                  )}
                   <ColorsWrapper>
                     <div>
                       {defaultColor.map(color => {
                         const isChecked = this.state.color === color;
                         return (
-                          <ColorLabel>
+                          <ColorLabel key={color}>
                             <div
                               style={{
                                 background: color,
                                 width: `${isChecked ? '18px' : '15px'}`,
                                 height: `${isChecked ? '18px' : '15px'}`
                               }}
-                              onClick={() =>
-                                this.onChangeComplete({ hex: color })
-                              }
-                            />
-                            {isChecked && <Checked>✔</Checked>}
+                              onClick={() => this.onColorChange({ hex: color })}
+                            >
+                              {isChecked && <Checked>✔</Checked>}
+                            </div>
                           </ColorLabel>
                         );
                       })}
                       <ColorLabel>
-                        <div onClick={this.handleClick}>Pick</div>
+                        <div
+                          onClick={this.handlePickButtonClick}
+                          style={{
+                            margin: 0,
+                            fontSize: 18,
+                            fontColor: 'gray'
+                          }}
+                          className={cx({
+                            icon: true,
+                            iconfont: true,
+                            ['bm-color-picker']: true
+                          })}
+                        />
                       </ColorLabel>
                     </div>
                     <span onClick={this.handleColorClose}>✕</span>
                   </ColorsWrapper>
                 </Toolbar>
-              ) : null}
-
+              )}
               <Toolbar
                 ref={e => (this.toolbarRef = e)}
                 style={{
@@ -375,7 +369,14 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
                   top: this.state.rect.y - 33 - 6
                 }}
               >
-                <Button>
+                <Button
+                  onClick={ev => {
+                    controller.run('handleCreateTaskClick', {
+                      ...this.props,
+                      ev
+                    });
+                  }}
+                >
                   +{' '}
                   {controller.run('getI18nText', {
                     ...this.props,
@@ -389,14 +390,13 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
                     viewBox="0 0 100 100"
                     width={7}
                     height={7}
-                    style={{ marginLeft: 8 }}
+                    style={{ marginLeft: 8, display: 'inline-block' }}
                   >
                     <polygon points="0 10, 100 10, 50 70" />
                   </svg>
                 </Button>
                 <Divider />
                 <Button
-                  style={{ padding: '0 8px' }}
                   onClick={() => {
                     controller.run('operation', {
                       ...this.props,
@@ -405,7 +405,14 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
                     });
                   }}
                 >
-                  {DeleteIcon}
+                  <div
+                    style={{ color: 'rgb(253,113,175)' }}
+                    className={cx({
+                      icon: true,
+                      iconfont: true,
+                      ['bm-trash']: true
+                    })}
+                  />
                 </Button>
               </Toolbar>
               <Icon
@@ -418,13 +425,14 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
                   iconfont: true,
                   ['bm-plus']: true
                 })}
-                onClick={() => {
+                onClick={e => {
                   controller.run('operation', {
                     ...this.props,
                     topicKey: model.focusKey,
                     opType: OpType.ADD_CHILD,
                     newTopicKey: createKey()
                   });
+                  e.stopPropagation();
                 }}
               />
               {model.rootTopicKey !== model.focusKey && (
@@ -438,13 +446,14 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
                     iconfont: true,
                     ['bm-add-sibling']: true
                   })}
-                  onClick={() => {
+                  onClick={e => {
                     controller.run('operation', {
                       ...this.props,
                       topicKey: model.focusKey,
                       opType: OpType.ADD_SIBLING,
                       newTopicKey: createKey()
                     });
+                    e.stopPropagation();
                   }}
                 />
               )}

@@ -72,12 +72,16 @@ export class Topic extends Record(defaultTopicRecord) {
       parentKey = null,
       blocks,
       subKeys = [],
-      collapse = false
+      collapse = false,
+      style = null,
+      color = null
     } = obj;
     return new Topic({
       key,
       parentKey,
       collapse,
+      style,
+      color,
       subKeys: List(subKeys),
       blocks: Block.createList(blocks)
     });

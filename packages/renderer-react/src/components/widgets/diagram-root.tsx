@@ -19,7 +19,7 @@ const DiagramContainer = styled.div`
   position: relative;
 `;
 export function DiagramRoot(props) {
-  const { controller, getRef, saveRef } = props;
+  const { controller, getRef, saveRef, model } = props;
   const [diagramState, setDiagramState] = useState(
     controller.run('getInitialDiagramState', props)
   );

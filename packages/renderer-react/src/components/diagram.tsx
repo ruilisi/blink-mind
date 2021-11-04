@@ -56,7 +56,7 @@ export class Diagram extends React.Component<Props> implements IDiagram {
     else this.resolveController(plugins, DefaultPlugin);
     let { model } = this.props;
     if (!model) {
-      model = this.controller.run('createNewModel');
+      return null;
     }
     this.diagramProps = {
       ...this.props,
