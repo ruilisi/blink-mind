@@ -32,12 +32,12 @@ export function OperationPlugin() {
   };
   const startEditingDesc = ({ model, topicKey }: BaseModifierArg) => {
     const topic = model.getTopic(topicKey);
-    const desc = topic.getBlock(BlockType.DESC);
+    const desc = topic.getBlock(BlockType.TASK);
     if (desc.block == null || desc.block.data == null) {
       model = ModelModifier.setBlockData({
         model,
         topicKey,
-        blockType: BlockType.DESC,
+        blockType: BlockType.TASK,
         data: ''
       });
     }

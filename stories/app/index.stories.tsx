@@ -123,7 +123,10 @@ class AppDemo extends BaseDemo {
           {
             key: 'sub2_2',
             parentKey: 'sub2',
-            blocks: [{ type: 'CONTENT', data: 'SubTopic' }],
+            blocks: [
+              { type: 'CONTENT', data: 'SubTopic' },
+              { type: 'TASK', data: { id: '123' } }
+            ],
             collapse: false
           }
         ]

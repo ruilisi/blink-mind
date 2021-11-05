@@ -26,7 +26,7 @@ export const TopicVisualLevel = {
 
 export const BlockType = {
   CONTENT: 'CONTENT',
-  DESC: 'DESC'
+  TASK: 'TASK'
 };
 
 export const FocusMode = {

@@ -1,7 +1,6 @@
 import { BlockType } from '@blink-mind/core';
 import * as React from 'react';
 import { TopicContentEditor } from './components/topic-content-editor';
-import { TopicDescEditor } from './components/topic-desc-editor';
 
 export function SimpleTextEditorPlugin() {
   return {
@@ -21,13 +20,9 @@ export function SimpleTextEditorPlugin() {
       return <TopicContentEditor {...props} />;
     },
 
-    renderTopicDescEditor(props) {
-      return <TopicDescEditor {...props} />;
-    },
-
     isBlockEmpty(props, next) {
       const { block, controller } = props;
-      if (block.type === BlockType.CONTENT || block.type === BlockType.DESC) {
+      if (block.type === BlockType.CONTENT || block.type === BlockType.TASK) {
         return (
           block.data == null ||
           controller.run('serializeBlockData', props) === ''
@@ -38,7 +33,7 @@ export function SimpleTextEditorPlugin() {
 
     serializeBlockData(props, next) {
       const { block } = props;
-      if (block.type === BlockType.CONTENT || block.type === BlockType.DESC) {
+      if (block.type === BlockType.CONTENT || block.type === BlockType.TASK) {
         return block.data;
       }
       return next();

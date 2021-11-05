@@ -45,7 +45,8 @@ export const Title = styled.div`
 `;
 
 export const TopicBlockIcon = styled.span`
-  margin: 0px 10px;
+  margin: 0px 8px;
+  color: gray;
   &:hover {
     color: palevioletred;
   }
@@ -61,8 +62,6 @@ export const PanelTabRoot = styled.div`
   max-height: 470px;
   overflow: auto;
 `;
-
-
 
 export const ToolbarItemPopoverTarget = styled.div`
   position: absolute;

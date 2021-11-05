@@ -10,13 +10,12 @@ import { RootWidget } from '../../components/widgets/root-widget';
 import { TopicCollapseIcon } from '../../components/widgets/topic-collapse-icon';
 import { TopicContent } from '../../components/widgets/topic-content';
 import { TopicContentWidget } from '../../components/widgets/topic-content-widget';
-import { TopicDesc } from '../../components/widgets/topic-desc';
+import { TopicTask } from '../../components/widgets/topic-task';
 import { TopicFocusedTools } from '../../components/widgets/topic-focused-tools';
 import { TopicSubLinks } from '../../components/widgets/topic-sub-links';
 import { TopicWidget } from '../../components/widgets/topic-widget';
 import { ViewPortViewer } from '../../components/widgets/view-port-util';
 import { linksRefKey, PropKey, RefKey } from '../../utils';
-import { renderDrawer } from './drawer';
 import Theme from './theme';
 const log = debug('plugin:rendering');
 
@@ -48,7 +47,6 @@ export function RenderingPlugin() {
         </SaveRef>
       );
     },
-    renderDrawer,
 
     getInitialDiagramState(props) {
       return {
@@ -73,12 +71,8 @@ export function RenderingPlugin() {
         ...nProps,
         zIndex: zIndex + 1
       });
-      const drawer = controller.run('renderDrawer', {
-        ...nProps,
-        zIndex: zIndex + 1
-      });
       const viewportViewer = controller.run('renderViewPortViewer', nProps);
-      return [breadcrumbs, modals, drawer, viewportViewer];
+      return [breadcrumbs, modals, viewportViewer];
     },
 
     renderEditorRootBreadcrumbs(props) {
@@ -146,8 +140,8 @@ export function RenderingPlugin() {
       switch (block.type) {
         case BlockType.CONTENT:
           return controller.run('renderTopicBlockContent', props);
-        case BlockType.DESC:
-          return controller.run('renderTopicBlockDesc', props);
+        case BlockType.TASK:
+          return controller.run('renderTopicBlockTask', props);
         default:
           break;
       }
@@ -158,8 +152,8 @@ export function RenderingPlugin() {
       return <TopicContent {...props} />;
     },
 
-    renderTopicBlockDesc(props) {
-      return <TopicDesc {...props} />;
+    renderTopicBlockTask(props) {
+      return <TopicTask {...props} />;
     },
 
     renderSubLinks(props) {
