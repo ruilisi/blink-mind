@@ -305,8 +305,7 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
                   style={{
                     padding: 0,
                     zIndex: 10,
-                    width: '100%',
-                    maxWidth: '250px',
+                    width: '250px',
                     left: this.state.rect.x + this.state.rect.width - 20,
                     bottom: this.state.colorBarBottom + 40
                   }}
