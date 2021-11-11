@@ -143,9 +143,8 @@ export function RenderingPlugin() {
         case BlockType.TASK:
           return controller.run('renderTopicBlockTask', props);
         default:
-          break;
+          return controller.run('renderTopicBlockExtra', props);
       }
-      return null;
     },
 
     renderTopicBlockContent(props) {

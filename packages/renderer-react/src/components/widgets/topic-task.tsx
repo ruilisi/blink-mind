@@ -23,7 +23,7 @@ export function TopicTask(props) {
   return (
     <TopicBlockIcon
       onClick={onClick}
-      className={iconClassName(IconName.SHOW_MENU)}
+      className={iconClassName(IconName.TASK)}
       tabIndex={-1}
     />
   );

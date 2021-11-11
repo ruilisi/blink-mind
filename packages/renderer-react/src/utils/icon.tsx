@@ -1,13 +1,14 @@
 import * as React from 'react';
 export const IconName = {
+  TASK: 'task-card',
   SHOW_MENU: 'show-menu',
   CLOSE: 'close',
   COLOR_PICKER: 'color-picker',
   NOTES: 'notes',
   PLUS: 'plus',
   MINUS: 'minus',
-  COLLAPSE_ALL: 'collapse',
-  EXPAND_ALL: 'expand',
+  COLLAPSE_ALL: 'collapse1',
+  EXPAND_ALL: 'expand1',
   CENTER: 'center',
   TRASH: 'trash',
   SEARCH: 'search',
@@ -21,11 +22,11 @@ export const IconName = {
   LAYOUT_LEFT: 'layout-left',
   LAYOUT_RIGHT: 'layout-right',
   UNDO: 'undo',
-  REDO: 'redo',
+  REDO: 'redo'
 };
 
 export function iconClassName(name) {
-  return `icon iconfont bm-${name}`;
+  return `icon iconfont icon-${name}`;
 }
 
 export function Icon(iconName) {

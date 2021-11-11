@@ -53,7 +53,7 @@ export function TopicCollapseIcon(props) {
       className={cx({
         icon: true,
         iconfont: true,
-        [`bm-${topic.collapse ? 'plus' : 'minus'}`]: true
+        [`icon-${topic.collapse ? 'plus' : 'minus'}`]: true
       })}
     />
   ) : null;

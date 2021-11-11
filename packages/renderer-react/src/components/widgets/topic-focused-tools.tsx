@@ -85,6 +85,20 @@ const Divider = styled.div`
   vertical-align: middle;
 `;
 
+const DropDownContent = styled.div`
+  display: block;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 160px;
+  border-radius: 10px;
+  bottom: 35px;
+  border: 1.5px solid rgb(233, 235, 241);
+  z-index: 1;
+  > div {
+    display: block;
+  }
+`;
+
 const ColorLabel = styled.div`
   width: 18px;
   height: 18px;
@@ -163,6 +177,7 @@ interface State {
   colorBarBottom: number;
   displayColor: boolean;
   displayColorPicker: boolean;
+  displayDropDown: boolean;
 }
 
 const defaultColor = [
@@ -189,7 +204,8 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
     colorBarBottom: 0,
     color: 'black',
     displayColor: false,
-    displayColorPicker: false
+    displayColorPicker: false,
+    displayDropDown: false
   };
 
   toolbarRef?: HTMLElement;
@@ -240,7 +256,8 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
     if (!this.state.rect) {
       this.setState({
         displayColor: false,
-        displayColorPicker: false
+        displayColorPicker: false,
+        displayDropDown: false
       });
     }
   }
@@ -257,6 +274,10 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
 
   handlePickButtonClick = () => {
     this.setState({ displayColorPicker: !this.state.displayColorPicker });
+  };
+
+  handleDropDownClick = () => {
+    this.setState({ displayDropDown: !this.state.displayDropDown });
   };
 
   handleColorClick = () => {
@@ -280,6 +301,7 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
 
   render() {
     const { saveRef, model, controller } = this.props;
+    const extraMenus = controller.run('getExtraMenu', this.props) || [];
 
     return (
       <>
@@ -352,13 +374,39 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
                           className={cx({
                             icon: true,
                             iconfont: true,
-                            ['bm-color-picker']: true
+                            ['icon-Colorpicker']: true
                           })}
                         />
                       </ColorLabel>
                     </div>
                     <span onClick={this.handleColorClose}>✕</span>
                   </ColorsWrapper>
+                </Toolbar>
+              )}
+              {this.state.displayDropDown && (
+                <Toolbar
+                  ref={e => (this.toolbarRef = e)}
+                  style={{
+                    left: this.state.rect.x + this.state.rect.width / 2 - 100,
+                    bottom: this.state.colorBarBottom + 5
+                  }}
+                >
+                  <DropDownContent>
+                    {extraMenus.map(([key, n]) => (
+                      <Button
+                        key={key}
+                        onClick={ev => {
+                          controller.run('extraMenuClick', {
+                            ...this.props,
+                            ev,
+                            buttonKey: key
+                          });
+                        }}
+                      >
+                        + {n}
+                      </Button>
+                    ))}
+                  </DropDownContent>
                 </Toolbar>
               )}
               <Toolbar
@@ -368,20 +416,34 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
                   top: this.state.rect.y - 33 - 6
                 }}
               >
-                <Button
-                  onClick={ev => {
-                    controller.run('handleCreateTaskClick', {
+                <div style={{ display: 'inline-block' }}>
+                  <Button
+                    onClick={ev => {
+                      controller.run('handleCreateTaskClick', {
+                        ...this.props,
+                        ev
+                      });
+                    }}
+                  >
+                    +{' '}
+                    {controller.run('getI18nText', {
                       ...this.props,
-                      ev
-                    });
-                  }}
-                >
-                  +{' '}
-                  {controller.run('getI18nText', {
-                    ...this.props,
-                    key: I18nKey.CREATE_TASK
-                  })}
-                </Button>
+                      key: I18nKey.CREATE_TASK
+                    })}
+                  </Button>
+                  {extraMenus.length > 0 && (
+                    <Button onClick={this.handleDropDownClick}>
+                      <svg
+                        viewBox="0 0 100 100"
+                        width={7}
+                        height={7}
+                        style={{ display: 'inline-block' }}
+                      >
+                        <polygon points="0 10, 100 10, 50 70" />
+                      </svg>
+                    </Button>
+                  )}
+                </div>
                 <Divider />
                 <Button onClick={this.handleColorClick}>
                   <ColorIndicator color={this.state.color} />
@@ -409,7 +471,7 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
                     className={cx({
                       icon: true,
                       iconfont: true,
-                      ['bm-trash']: true
+                      ['icon-trash']: true
                     })}
                   />
                 </Button>
@@ -422,7 +484,7 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
                 className={cx({
                   icon: true,
                   iconfont: true,
-                  ['bm-plus']: true
+                  ['icon-plus']: true
                 })}
                 onClick={e => {
                   controller.run('operation', {
@@ -443,7 +505,7 @@ export class TopicFocusedTools extends BaseWidget<BaseProps, State> {
                   className={cx({
                     icon: true,
                     iconfont: true,
-                    ['bm-add-sibling']: true
+                    ['icon-create_sibling_node']: true
                   })}
                   onClick={e => {
                     controller.run('operation', {

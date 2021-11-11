@@ -28,39 +28,36 @@ const Container = styled.div`
   height: 100%;
 `;
 
-function ChangeThemePlugin() {
-  let themeIndex = 1;
-  function ToolbarItemTheme(props) {
-    const onClickChangeTheme = () => {
-      const { controller } = props;
-      let themeKeys = controller.run('getAllThemes', props).keys();
-      themeKeys = Array.from(themeKeys);
-      controller.run('setTheme', {
-        ...props,
-        themeKey: themeKeys[themeIndex++ % themeKeys.length]
-      });
-    };
-    return (
-      <ToolbarItem
-        className={iconClassName(IconName.THEME)}
-        onClick={onClickChangeTheme}
-        {...props}
-      />
-    );
-  }
+function CorePlugin() {
   return {
-    customizeToolbar(props, next): ToolbarItemConfigs {
-      const res: ToolbarItemConfigs = next();
-      res.push({
-        order: 30,
-        element: ToolbarItemTheme
-      });
-      return res;
+    getExtraMenu: (props, next) => {
+      return [
+        ['test1', 'Test1'],
+        ['test2', 'Test2']
+      ];
+    },
+    extraMenuClick: ({ buttonKey }) => {
+      console.info(buttonKey);
+    },
+    renderTopicBlockExtra: (ctx: any) => {
+      const block = ctx.block;
+      switch (block.type) {
+        case 'IMAGE':
+          return (
+            <span tabIndex={-1} className={'tupian'}>
+              IMAG
+            </span>
+          );
+        default:
+          break;
+      }
+      return null;
     }
   };
 }
 
 const plugins = [
+  CorePlugin()
   // RichTextEditorPlugin(),
   // ThemeSelectorPlugin(),
   // TopicReferencePlugin(),
@@ -117,7 +114,16 @@ class AppDemo extends BaseDemo {
           {
             key: 'sub2_1',
             parentKey: 'sub2',
-            blocks: [{ type: 'CONTENT', data: 'SubTopic' }],
+            blocks: [
+              { type: 'CONTENT', data: 'SubTopic' },
+              {
+                type: 'IMAGE',
+                data: {
+                  src: 'https://assets.ruilisi.com/UMl=wIs5l=dPg4jOa76uYA==',
+                  id: 'hello-world'
+                }
+              }
+            ],
             collapse: false
           },
           {

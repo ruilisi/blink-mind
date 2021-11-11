@@ -46,7 +46,7 @@ export class TopicPopupMenuItem extends BaseWidget<Props> {
     const { config } = this.props;
     return (
       <MenuItem onClick={this.onClick}>
-        <span className={cx('icon', 'iconfont', `bm-${config.icon}`)} />
+        <span className={cx('icon', 'iconfont', `icon-${config.icon}`)} />
         <MenuItemLabel className="label">{config.label}</MenuItemLabel>
       </MenuItem>
     );
