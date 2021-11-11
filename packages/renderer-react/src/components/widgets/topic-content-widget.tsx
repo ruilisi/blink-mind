@@ -15,11 +15,18 @@ interface TopicContentProps {
 const TopicContent = styled.div<TopicContentProps>`
   display: flex;
   align-items: center;
+  flex-flow: column;
   cursor: pointer;
   //overflow: hidden;
   position: relative;
   margin-top: ${props => `${props.marginV}px`};
   margin-bottom: ${props => `${props.marginV}px`};
+`;
+
+const TopicContentBody = styled.div<TopicContentProps>`
+  display: flex;
+  align-items: center;
+  position: relative;
 `;
 
 const TopicContentWithDropArea = styled.div`
@@ -197,8 +204,11 @@ export class TopicContentWidget extends BaseWidget<Props, State> {
           onDoubleClick={this.onDoubleClick}
           // {...dropEventHandlers}
         >
-          {controller.run('renderTopicBlocks', props)}
-          {controller.run('renderTopicContentOthers', props)}
+          {controller.run('renderTopicCover', props)}
+          <TopicContentBody>
+            {controller.run('renderTopicBlocks', props)}
+            {controller.run('renderTopicContentOthers', props)}
+          </TopicContentBody>
         </TopicContent>
         {/* {nextDropArea} */}
         {((dir === TopicDirection.MAIN &&
