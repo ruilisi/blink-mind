@@ -25,7 +25,7 @@ function HotKeyPlugin() {
   return {
     customizeHotKeys(props, next): HotKeysConfig {
       const hotKeys: HotKeysConfig = next();
-      hotKeys.topicHotKeys.set('MY_CUSTOM', {
+      hotKeys.topicHotKeys.push({
         label: 'MY_CUSTOM',
         combo: 'shift + a',
         onKeyDown: e => {

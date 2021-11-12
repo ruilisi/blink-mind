@@ -21,57 +21,44 @@ export function HotKeyPlugin() {
         e.preventDefault();
         op(opType, props);
       };
-      const topicHotKeys = new Map<string, HotKeyItem>([
-        [
-          HotKeyName.ADD_CHILD,
-          {
-            label: 'add child',
-            combo: 'tab',
-            onKeyDown: handleKeyDown(OpType.ADD_CHILD)
-          }
-        ],
-        [
-          HotKeyName.ADD_SIBLING,
-          {
-            label: 'add sibling',
-            combo: 'enter',
-            onKeyDown: handleKeyDown(OpType.ADD_SIBLING)
-          }
-        ],
-        [
-          HotKeyName.DELETE_TOPIC,
-          {
-            label: 'delete topic',
-            combo: 'del',
-            onKeyDown: handleKeyDown(OpType.DELETE_TOPIC)
-          }
-        ],
-        [
-          HotKeyName.EDIT_CONTENT,
-          {
-            label: 'edit content',
-            combo: 'space',
-            onKeyDown: handleKeyDown(OpType.START_EDITING_CONTENT)
-          }
-        ],
-        [
-          HotKeyName.EDIT_NOTES,
-          {
-            label: 'edit notes',
-            combo: 'alt + d',
-            onKeyDown: handleKeyDown(OpType.START_EDITING_DESC)
-          }
-        ],
-        [
-          HotKeyName.SET_EDITOR_ROOT,
-          {
-            label: 'set editor root',
-            combo: 'alt + shift + f',
-            onKeyDown: handleKeyDown(OpType.SET_EDITOR_ROOT)
-          }
-        ]
-      ]);
-      const globalHotKeys = new Map();
+      const topicHotKeys: HotKeyItem[] = [
+        {
+          label: 'add child',
+          combo: 'tab',
+          onKeyDown: handleKeyDown(OpType.ADD_CHILD)
+        },
+        {
+          label: 'add sibling',
+          combo: 'enter',
+          onKeyDown: handleKeyDown(OpType.ADD_SIBLING)
+        },
+        {
+          label: 'delete topic',
+          combo: 'del',
+          onKeyDown: handleKeyDown(OpType.DELETE_TOPIC)
+        },
+        {
+          label: 'delete topic',
+          combo: 'backspace',
+          onKeyDown: handleKeyDown(OpType.DELETE_TOPIC)
+        },
+        {
+          label: 'edit content',
+          combo: 'space',
+          onKeyDown: handleKeyDown(OpType.START_EDITING_CONTENT)
+        },
+        {
+          label: 'edit notes',
+          combo: 'alt + d',
+          onKeyDown: handleKeyDown(OpType.START_EDITING_DESC)
+        },
+        {
+          label: 'set editor root',
+          combo: 'alt + shift + f',
+          onKeyDown: handleKeyDown(OpType.SET_EDITOR_ROOT)
+        }
+      ];
+      const globalHotKeys: HotKeyItem[] = [];
       return {
         topicHotKeys,
         globalHotKeys

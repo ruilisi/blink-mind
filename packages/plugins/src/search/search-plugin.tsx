@@ -15,7 +15,7 @@ export function SearchPlugin() {
       const { controller, model } = props;
       const hotKeys: HotKeysConfig = next();
 
-      hotKeys.globalHotKeys.set(HOT_KEY_NAME_SEARCH, {
+      hotKeys.globalHotKeys.push({
         label: 'search',
         combo: 'ctrl + f',
         onKeyDown: () => {

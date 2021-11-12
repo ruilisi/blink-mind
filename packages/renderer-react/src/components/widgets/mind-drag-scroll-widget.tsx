@@ -46,11 +46,11 @@ class MindDragScrollWidget<
     if (hotKeys === null) return null;
     if (
       !(
-        hotKeys.topicHotKeys instanceof Map &&
-        hotKeys.globalHotKeys instanceof Map
+        hotKeys.topicHotKeys instanceof Array &&
+        hotKeys.globalHotKeys instanceof Array
       )
     ) {
-      throw new TypeError('topicHotKeys and globalHotKeys must be a Map');
+      throw new TypeError('topicHotKeys and globalHotKeys must be an Array');
     }
     const keys = [];
     if (

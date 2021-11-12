@@ -44,7 +44,7 @@ const items: TopicContextMenuItemConfig[] = [
   {
     icon: 'delete-node',
     label: I18nKey.DELETE,
-    shortcut: 'Del',
+    shortcut: 'Del/Backspace',
     opType: OpType.DELETE_TOPIC
   },
   {

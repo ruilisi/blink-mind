@@ -16,7 +16,7 @@ function HotKeyPlugin() {
   return {
     customizeHotKeys(props, next) {
       const hotKeysMap = next();
-      hotKeysMap.set('MY_CUSTOM', {
+      hotKeysMap.push({
         label: 'MY_CUSTOM',
         combo: 'shift + a',
         onKeyDown: e => {

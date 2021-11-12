@@ -16,8 +16,8 @@ export interface HotKeyItem {
 export type HotKeyMap = Map<string, HotKeyItem>;
 
 export interface HotKeysConfig {
-  topicHotKeys: HotKeyMap;
-  globalHotKeys: HotKeyMap;
+  topicHotKeys: HotKeyItem[];
+  globalHotKeys: HotKeyItem[];
 }
 
 export const HotKeyName = {
