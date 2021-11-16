@@ -18,7 +18,7 @@ function normalizeHtml(str: string): string {
   return str && str.replace(/&nbsp;|\u202F|\u00A0/g, ' ');
 }
 
-function replaceCaret(el: HTMLElement) {
+export function replaceCaret(el: HTMLElement) {
   // Place the caret at the end of the element
   const target = document.createTextNode('');
   el.appendChild(target);

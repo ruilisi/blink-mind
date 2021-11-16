@@ -28,8 +28,16 @@ export class TopicContentEditor extends SimpleTextEditor {
   }
 
   onKeyDown = e => {
+    if (e.code === 'NumpadEnter') {
+      e.preventDefault();
+      return false;
+    }
     if (e.nativeEvent.code === 'Enter') {
-      this.save();
+      if (e.metaKey || e.ctrlKey) {
+        this.props.controller.run('markdownNewLine', this.props);
+      } else {
+        this.save();
+      }
     }
   };
 
@@ -37,8 +45,7 @@ export class TopicContentEditor extends SimpleTextEditor {
     log('onClickOutSide');
     if (!this.props.readOnly) {
       this.save();
-    }
-    else if (!e.defaultPrevented && this.props.readOnly) {
+    } else if (!e.defaultPrevented && this.props.readOnly) {
       const { model, topicKey, controller } = this.props;
       if (model.focusKey === topicKey) {
         controller.run('operation', {

@@ -1,10 +1,16 @@
-import { DiagramLayoutType, FocusMode, OpType, TopicDirection } from '@blink-mind/core';
+import {
+  DiagramLayoutType,
+  FocusMode,
+  OpType,
+  TopicDirection
+} from '@blink-mind/core';
 import { ContextMenu } from '@blueprintjs/core';
 import debug from 'debug';
 import * as React from 'react';
 import styled from 'styled-components';
 import { collapseRefKey, contentRefKey, PropKey } from '../../utils';
 import { BaseProps, BaseWidget } from '../common';
+import ResizeObserver from 'resize-observer-polyfill';
 
 const log = debug('node:topic-content-widget');
 
@@ -108,6 +114,17 @@ export class TopicContentWidget extends BaseWidget<Props, State> {
 
   needRelocation: boolean = false;
   oldCollapseIconVector;
+
+  componentDidMount() {
+    const topicContentResizeObserver = new ResizeObserver(
+      (entries: ResizeObserverEntry[], observer) => {
+        this.props.controller.run('layout', this.props);
+      }
+    );
+    topicContentResizeObserver.observe(
+      this.props.getRef(contentRefKey(this.props.topicKey))
+    );
+  }
 
   componentDidUpdate() {
     if (this.needRelocation) {

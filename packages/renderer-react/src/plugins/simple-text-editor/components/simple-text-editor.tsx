@@ -4,6 +4,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { ContentEditable } from './content-editable';
 const log = debug('node:text-editor');
+import ResizeObserver from 'resize-observer-polyfill';
 
 interface ContentProps {
   readOnly?: boolean;
@@ -22,6 +23,7 @@ interface Props {
   readOnly: boolean;
   topicKey: KeyType;
   saveRef?: Function;
+  getRef?: Function;
 }
 
 interface State {
@@ -52,6 +54,16 @@ export class SimpleTextEditor extends React.PureComponent<Props, State> {
     // const { readOnly } = this.props;
     // if (readOnly) return;
     document.addEventListener('click', this._handleClick);
+    const contentResizeObserver = new ResizeObserver(
+      (entries: ResizeObserverEntry[], observer) => {
+        this.props.controller.run('layout', this.props);
+      }
+    );
+    contentResizeObserver.observe(
+      this.props.getRef(
+        this.getCustomizeProps().getRefKeyFunc(this.props.topicKey)
+      )
+    );
   }
 
   componentWillUnmount() {
@@ -96,7 +108,7 @@ export class SimpleTextEditor extends React.PureComponent<Props, State> {
   };
 
   render() {
-    const { topicKey, saveRef } = this.props;
+    const { topicKey, saveRef, getRef } = this.props;
     const {
       readOnly,
       getRefKeyFunc,
@@ -114,6 +126,9 @@ export class SimpleTextEditor extends React.PureComponent<Props, State> {
       placeholder,
       style
     };
+    const shouldRenderAsMarkdown = this.props.controller.run(
+      'shouldRenderAsMarkdown'
+    );
 
     const contentProps = {
       key,
@@ -125,10 +140,11 @@ export class SimpleTextEditor extends React.PureComponent<Props, State> {
     };
     return (
       <Content {...contentProps}>
-        <ContentEditable
-          {...editorProps}
-          autoFocus
-        />
+        {shouldRenderAsMarkdown && this.props.readOnly ? (
+          this.props.controller.run('renderTopicMarkdown', this.getContent())
+        ) : (
+          <ContentEditable {...editorProps} autoFocus />
+        )}
       </Content>
     );
   }
